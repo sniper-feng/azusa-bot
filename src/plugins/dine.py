@@ -1,3 +1,5 @@
+from platform import system
+
 from nonebot import on_command, on_regex
 from nonebot import on_command, on_regex
 from nonebot.params import CommandArg, EventMessage
@@ -11,7 +13,12 @@ from src.libraries.maimai_best_40 import generate
 from src.libraries.maimai_best_50 import generate50
 import re
 
-with open("D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json", 'r', encoding="utf-8") as f:
+if system() == "Windows":
+    dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
+else:
+    dinePath = "~/bot/azusa-bot/prop/dine.json"
+
+with open(dinePath, 'r', encoding="utf-8") as f:
     dineList = json.load(f)
 dine = on_regex(r"(一|二)区吃什么")
 

@@ -1,4 +1,5 @@
 import json
+from platform import system
 from typing import re
 from nonebot import on_command, on_regex
 from nonebot.params import CommandArg, EventMessage
@@ -16,8 +17,12 @@ from nonebot import require
 from nonebot.plugin.on import on_fullmatch, on_regex, on_command
 
 require('maimaidx')
+if system() == "Windows":
+    missionPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\mission.json"
+else:
+    missionPath = "~/bot/azusa-bot/prop/mission.json"
 
-with open("D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\mission.json", 'r', encoding="utf-8") as f:
+with open(missionPath, 'r', encoding="utf-8") as f:
     missionList = json.load(f)
 
 getMissionList = on_command('课题列表', aliases={'今日课题'})
