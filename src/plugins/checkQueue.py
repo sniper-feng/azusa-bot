@@ -27,9 +27,6 @@ register = on_regex(shop_regex)
 
 # format of data csv:
 # month,mday,wday,location,queue
-with open("/home/sniperpigeon/bot/azusa-bot/res/statis.csv", "a") as c:
-    csvFile = c
-
 
 
 @register.handle()
@@ -40,8 +37,8 @@ async def _(event: Event, message: Message = EventMessage()):
     shop_queue[shopid] = queue
     report_time[shopid] = event.time
     localtime = time.localtime(time.time())
-
-    csvFile.writelines(f"{localtime.tm_mon},{localtime.tm_mday},{localtime.tm_wday},{shopid},{queue}")
+    with open("/home/sniperpigeon/bot/azusa-bot/res/statis.csv", "a+") as csvFile:
+        csvFile.write(f"{localtime.tm_mon},{localtime.tm_mday},{localtime.tm_wday},{shopid},{queue}\n")
 
 
 
@@ -63,4 +60,5 @@ async def _(event: Event, message: Message = EventMessage()):
     else:
         await checkOut.send(f"{localtime.tm_hour}点{localtime.tm_min}分的时候{shop}有{queue}人喵...")
         sendTime = time.localtime(time.time())
-        csvFile.writelines(f"{sendTime.tm_mon},{sendTime.tm_mday},{sendTime.tm_wday},{shopid},{queue}")
+        with open("/home/sniperpigeon/bot/azusa-bot/res/statis.csv", "a+") as csvFile:
+            csvFile.write(f"{localtime.tm_mon},{localtime.tm_mday},{localtime.tm_wday},{shopid},{queue}\n")

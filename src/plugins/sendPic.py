@@ -14,7 +14,7 @@ from src.libraries.maimai_best_40 import generate
 from src.libraries.maimai_best_50 import generate50
 import re
 
-lastSentTime = -1
+#lastSentTime = -1
 sendAzusa = on_fullmatch("梓喵可爱")
 if system() == "Windows":
     picsPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\res\\"
@@ -28,15 +28,15 @@ picNum = len(pics)
 
 @sendAzusa.handle()
 async def _(event: Event, message: Message = EventMessage()):
-    global lastSentTime
-    if time.time() - lastSentTime >= 1000 * 60 * 1:  # 一分钟内发过图
-        index = random.randint(1, picNum)
-        await sendAzusa.send(Message([
-            MessageSegment("image", {
-                "file": f"{'file:///' + picsPath + str(index) + '.png'}"
+   # global lastSentTime
+    #if time.time() - lastSentTime >= 1000 * 60 * 1:  # 一分钟内发过图
+    index = random.randint(1, picNum)
+    await sendAzusa.send(Message([
+        MessageSegment("image", {
+            "file": f"{'file:///' + picsPath + str(index) + '.png'}"
             })
         ])
         )
-        lastSentTime = time.time()
-    else:
-        await sendAzusa.send("知道你夸我可爱了,刚刚才发了,不要再要了喵")
+    lastSentTime = time.time()
+    #else:
+    #await sendAzusa.send("知道你夸我可爱了,刚刚才发了,不要再要了喵")
