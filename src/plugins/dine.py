@@ -16,7 +16,7 @@ import re
 if system() == "Windows":
     dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
 else:
-    dinePath = "~/bot/azusa-bot/prop/dine.json"
+    dinePath = "/home/sniperpigeon/bot/azusa-bot/prop/dine.json"
 
 with open(dinePath, 'r', encoding="utf-8") as f:
     dineList = json.load(f)

@@ -20,7 +20,7 @@ require('maimaidx')
 if system() == "Windows":
     missionPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\mission.json"
 else:
-    missionPath = "~/bot/azusa-bot/prop/mission.json"
+    missionPath = "/home/sniperpigeon/bot/azusa-bot/prop/mission.json"
 
 with open(missionPath, 'r', encoding="utf-8") as f:
     missionList = json.load(f)

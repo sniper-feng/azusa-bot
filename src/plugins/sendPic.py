@@ -19,7 +19,7 @@ sendAzusa = on_fullmatch("梓喵可爱")
 if system() == "Windows":
     picsPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\res\\"
 else:
-    picsPath = "~/bot/azusa-bot/res/"
+    picsPath = "/home/sniperpigeon/bot/azusa-bot/res/"
 
 pics = os.listdir(picsPath)
 picNum = len(pics)
@@ -29,7 +29,7 @@ picNum = len(pics)
 @sendAzusa.handle()
 async def _(event: Event, message: Message = EventMessage()):
     global lastSentTime
-    if time.time() - lastSentTime >= 1000 * 60 * 2:  # 两分钟内发过图
+    if time.time() - lastSentTime >= 1000 * 60 * 1:  # 一分钟内发过图
         index = random.randint(1, picNum)
         await sendAzusa.send(Message([
             MessageSegment("image", {
