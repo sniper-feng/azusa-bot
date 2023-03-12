@@ -16,9 +16,9 @@ import re
 from nonebot import require
 from nonebot.plugin.on import on_fullmatch, on_regex, on_command
 
-shop_name = ["超星", "香坊", "哈西", "百盛", "阿城","江一","江二"]
-shop_queue = [-1, -1, -1, -1, -1,-1,-1]
-report_time = [0, 0, 0, 0, 0,0,0]
+shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二"]
+shop_queue = [-1, -1, -1, -1, -1, -1, -1]
+report_time = [0, 0, 0, 0, 0, 0, 0]
 shop_regex = r"(超星|香坊|阿城|哈西|百盛|江一|江二)[0-9]{1,}"
 register = on_regex(shop_regex)
 
@@ -30,17 +30,22 @@ async def _(event: Event, message: Message = EventMessage()):
     shopid = shop_name.index(shop)
     shop_queue[shopid] = queue
     report_time[shopid] = event.time
+
+
 check_regex = r"(超星|香坊|阿城|哈西|百盛|江一|江二)几"
 checkOut = on_regex(check_regex)
+
 
 @checkOut.handle()
 async def _(event: Event, message: Message = EventMessage()):
     shop = event.get_plaintext()[0:2]
     shopid = shop_name.index(shop)
     queue = shop_queue[shopid]
+    localtime = time.localtime(report_time[shopid])
+    if time.localtime(time.time()).tm_yday - localtime.tm_yday >= 1:
+        await checkOut.send("呀, 上次有人报人数还是昨天喵...已经清空了喵!")
+        shop_queue[shopid] = -1
     if queue == -1:
         await checkOut.send("没有人报人数喵...")
     else:
-        localtime = time.localtime(report_time[shopid])
         await checkOut.send(f"{localtime.tm_hour}点{localtime.tm_min}分的时候{shop}有{queue}人喵...")
-
