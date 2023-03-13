@@ -22,7 +22,7 @@ with open(dinePath, 'r', encoding="utf-8") as f:
     dineList = json.load(f)
 
 dine = on_regex(r"(一|二)区吃什么")
-sendDineList = on_regex(r".{2}菜单")
+sendDineList = on_regex(r"^.{2}菜单$")
 
 list_name = ["一区", "二区", "超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二"]
 
