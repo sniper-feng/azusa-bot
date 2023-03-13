@@ -65,3 +65,17 @@ async def _(event: Event, message: Message = EventMessage()):
         with open("/home/sniperpigeon/bot/azusa-bot/res/statis.csv", "a+") as csvFile:
             csvFile.write(f"{reportedLocalTime.tm_mon},{reportedLocalTime.tm_mday},{reportedLocalTime.tm_wday},{shopid},{queue}\n")
 
+
+
+sendAll = on_fullmatch("魅力冰城")
+@sendAll.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    string = "冰!! 城 夏↓↓ 都~ 哈尔滨大逼队欢迎您...喵?\n"
+    for index in range(0,len(shop_name)):
+        if shop_queue[index] == -1:
+            string += f"{shop_name[index]}没有数据\n"
+        elif shop_queue[index] >=8 :
+            string += f"{shop_name[index]}有{shop_queue[index]}人!卧槽 大逼队!\n"
+        else:
+            string += f"{shop_name[index]}有{shop_queue[index]}人.\n"
+    await sendAll.send(string)
