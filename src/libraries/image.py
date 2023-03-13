@@ -1,11 +1,12 @@
 import base64
 from io import BytesIO
+from platform import system
 
 from PIL import ImageFont, ImageDraw, Image
 
 
 path = 'src/static/high_eq_image.png'
-fontpath = "src/static/msyh.ttc"
+fontpath = "/home/sniperpigeon/bot/azusa-bot/src/static/msyh.ttc"
 
 
 def draw_text(img_pil, text, offset_x):

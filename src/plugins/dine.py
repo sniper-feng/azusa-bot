@@ -22,7 +22,7 @@ with open(dinePath, 'r', encoding="utf-8") as f:
     dineList = json.load(f)
 
 dine = on_regex(r"(一|二)区吃什么")
-sendDineList = on_regex(r".{2}菜单")
+sendDineList = on_regex(r"^.{2}菜单$")
 
 list_name = ["一区", "二区", "超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二"]
 
@@ -42,10 +42,10 @@ async def _(event: Event, message: Message = EventMessage()):
         listStr = f"群友在{name}登录过的吃的有:\n"
         if index <=1:
             for dish in dineList['campus'][index]:
-                listStr += dish + "\n"
+                listStr += dish + "              "
         else:
             for dish in dineList['shop'][index-2]:
-                listStr += dish + "\n"
+                listStr += dish + "              "
         listStr +="喵!"
         await sendDineList.send(listStr)
 
