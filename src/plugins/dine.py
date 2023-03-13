@@ -42,10 +42,10 @@ async def _(event: Event, message: Message = EventMessage()):
         listStr = f"群友在{name}登录过的吃的有:\n"
         if index <=1:
             for dish in dineList['campus'][index]:
-                listStr += dish + "\n"
+                listStr += dish + "              "
         else:
             for dish in dineList['shop'][index-2]:
-                listStr += dish + "\n"
+                listStr += dish + "              "
         listStr +="喵!"
         await sendDineList.send(listStr)
 
