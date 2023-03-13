@@ -2,7 +2,6 @@ import json
 import time
 from typing import re
 
-
 from nonebot import on_command, on_regex
 from nonebot.params import CommandArg, EventMessage
 from nonebot.adapters import Event
@@ -41,7 +40,6 @@ async def _(event: Event, message: Message = EventMessage()):
         csvFile.write(f"{localtime.tm_mon},{localtime.tm_mday},{localtime.tm_wday},{shopid},{queue}\n")
 
 
-
 check_regex = r"(超星|香坊|阿城|哈西|百盛|江一|江二)几"
 checkOut = on_regex(check_regex)
 
@@ -51,14 +49,16 @@ async def _(event: Event, message: Message = EventMessage()):
     shop = event.get_plaintext()[0:2]
     shopid = shop_name.index(shop)
     queue = shop_queue[shopid]
-    localtime = time.localtime(report_time[shopid])
-    if time.localtime(time.time()).tm_yday - localtime.tm_yday >= 1:
+    reportedLocalTime = time.localtime(report_time[shopid])
+    if time.localtime(time.time()).tm_yday - reportedLocalTime.tm_yday >= 1:
         await checkOut.send("呀, 上次有人报人数还是昨天喵...已经清空了喵!")
         shop_queue[shopid] = -1
+        report_time[shopid] = time.time()
     if queue == -1:
         await checkOut.send("没有人报人数喵...")
     else:
-        await checkOut.send(f"{localtime.tm_hour}点{localtime.tm_min}分的时候{shop}有{queue}人喵...")
+        await checkOut.send(f"{reportedLocalTime.tm_hour}点{reportedLocalTime.tm_min}分的时候{shop}有{queue}人喵...")
         sendTime = time.localtime(time.time())
         with open("/home/sniperpigeon/bot/azusa-bot/res/statis.csv", "a+") as csvFile:
-            csvFile.write(f"{localtime.tm_mon},{localtime.tm_mday},{localtime.tm_wday},{shopid},{queue}\n")
+            csvFile.write(f"{reportedLocalTime.tm_mon},{reportedLocalTime.tm_mday},{reportedLocalTime.tm_wday},{shopid},{queue}\n")
+
