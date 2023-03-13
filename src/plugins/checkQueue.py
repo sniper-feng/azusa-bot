@@ -31,6 +31,9 @@ register = on_regex(shop_regex)
 @register.handle()
 async def _(event: Event, message: Message = EventMessage()):
     queue = int(re.search("[0-9]+", event.get_plaintext()).group(0))
+    if queue >= 30:
+        await register.send("再乱搞我要生气了喵! ")
+        return
     shop = event.get_plaintext()[0:2]
     shopid = shop_name.index(shop)
     shop_queue[shopid] = queue
