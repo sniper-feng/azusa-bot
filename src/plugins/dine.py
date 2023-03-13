@@ -25,6 +25,13 @@ dine = on_regex(r"(一|二)区吃什么")
 
 @dine.handle()
 async def _(event: Event, message: Message = EventMessage()):
+    if system() == "Windows":
+        dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
+    else:
+        dinePath = "/home/sniperpigeon/bot/azusa-bot/prop/dine.json"
+
+    with open(dinePath, 'r', encoding="utf-8") as f:
+        dineList = json.load(f)
     campus = 0 if message[0].data['text'][0] == '一' else 1
     dineInCampus = dineList['campus'][campus]
     index = random.randint(0, len(dineInCampus))
@@ -39,6 +46,13 @@ shopDine = on_regex(r"(超星|香坊|阿城|哈西|百盛|江一|江二)吃什�
 
 @shopDine.handle()
 async def _(event: Event, message: Message = EventMessage()):
+    if system() == "Windows":
+        dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
+    else:
+        dinePath = "/home/sniperpigeon/bot/azusa-bot/prop/dine.json"
+
+    with open(dinePath, 'r', encoding="utf-8") as f:
+        dineList = json.load(f)
     shopName = event.get_plaintext()[0:2]
     shopid = shop_name.index(shopName)
     dineInShop = dineList['shop'][shopid]
