@@ -34,14 +34,14 @@ async def _(event: Event, message: Message = EventMessage()):
             await addmeal(strings[3], 0)
         elif strings[2] == "二区":
             await addmeal(strings[3], 1)
-        elif shop_name.index(strings[2]) != -1:
+        elif shop_name.count(strings[2]) == 1:
             await addmeal_shop(strings[3], shop_name.index(strings[2]))
     if strings[1] == "removemeal":
         if strings[2] == "一区":
             await removemeal(strings[3], 0)
         if strings[2] == "二区":
             await removemeal(strings[3], 1)
-        elif shop_name.index(strings[2]) != -1:
+        elif shop_name.count(strings[2]) == 1:
             await removemeal_shop(strings[3], shop_name.index(strings[2]))
 
 
