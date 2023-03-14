@@ -40,7 +40,7 @@ async def _(event: Event, message: Message = EventMessage()):
     report_time[shopid] = event.time
     localtime = time.localtime(time.time())
     with open("/home/sniperpigeon/bot/azusa-bot/res/statis.csv", "a+") as csvFile:
-        csvFile.write(f"{localtime.tm_mon},{localtime.tm_mday},{localtime.tm_wday},{shopid},{queue}\n")
+        csvFile.write(f"{localtime.tm_mon},{localtime.tm_mday},{localtime.tm_wday},{localtime.tm_hour},{localtime.tm_min},{shopid},{queue}\n")
 
 
 check_regex = r"(超星|香坊|阿城|哈西|百盛|江一|江二)几"
@@ -63,7 +63,7 @@ async def _(event: Event, message: Message = EventMessage()):
         await checkOut.send(f"{reportedLocalTime.tm_hour}点{reportedLocalTime.tm_min}分的时候{shop}有{queue}人喵...")
         sendTime = time.localtime(time.time())
         with open("/home/sniperpigeon/bot/azusa-bot/res/statis.csv", "a+") as csvFile:
-            csvFile.write(f"{reportedLocalTime.tm_mon},{reportedLocalTime.tm_mday},{reportedLocalTime.tm_wday},{shopid},{queue}\n")
+            csvFile.write(f"{reportedLocalTime.tm_mon},{reportedLocalTime.tm_mday},{reportedLocalTime.tm_wday},{reportedLocalTime.tm_hour},{reportedLocalTime.tm_min},{shopid},{queue}\n")
 
 
 
@@ -75,7 +75,9 @@ async def _(event: Event, message: Message = EventMessage()):
         if shop_queue[index] == -1:
             string += f"{shop_name[index]}没有数据\n"
         elif shop_queue[index] >=8 :
-            string += f"{shop_name[index]}有{shop_queue[index]}人!卧槽 大逼队!\n"
+            reportedLocalTime = time.localtime(report_time[index])
+            string += f"{shop_name[index]}有{shop_queue[index]}人({reportedLocalTime.tm_hour}:{reportedLocalTime.tm_min})!卧槽 大逼队!\n"
         else:
-            string += f"{shop_name[index]}有{shop_queue[index]}人.\n"
+            reportedLocalTime = time.localtime(report_time[index])
+            string += f"{shop_name[index]}有{shop_queue[index]}人({reportedLocalTime.tm_hour}:{reportedLocalTime.tm_min}).\n"
     await sendAll.send(string)
