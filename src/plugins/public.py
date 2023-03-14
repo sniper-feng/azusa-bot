@@ -4,7 +4,8 @@ from nonebot.adapters.onebot.v11 import Message, Event, Bot, MessageSegment
 from nonebot.exception import IgnoredException
 from nonebot.message import event_preprocessor
 from src.libraries.image import *
-
+DANGSHIYAN_GROUP_ID = 362333805
+TEST_GROUP_ID = 547862267
 
 @event_preprocessor
 async def preprocessor(bot, event, state):
@@ -31,11 +32,14 @@ botconfig addmeal/removemeal 一区/二区 <食物> | 给工大菜单加菜/删�
 botconfig addmeal/removemeal <机厅> <食物> | 给机厅菜单加菜/删菜
 梓喵可爱 | 你猜
 '''
-    await help.send(Message([
-        MessageSegment("image", {
-            "file": f"base64://{str(image_to_base64(text_to_image(help_str)), encoding='utf-8')}"
-        })
-    ]))
+    await help.send(help_str)
+    if event.group_id == DANGSHIYAN_GROUP_ID or event.group_id == TEST_GROUP_ID:
+        await help.send(
+            '''使用命令 新建约饭 <一区/二区> <午饭/晚饭> <食物>添加约饭
+使用 查看约饭 查看所有的约饭
+使用 加入约饭 idxx 加入一个存在的约饭!'''
+        )
+
 
 
 async def _group_poke(bot: Bot, event: Event) -> bool:
