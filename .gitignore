@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 .idea
 .code
 venv
@@ -6,12 +5,3 @@ __pycache__
 /logs/
 /data/
 /src/static/
-=======
-.idea
-.code
-venv
-__pycache__
-/logs/
-/data/
-/src/static/
->>>>>>> 2e8ac0cca0a3366398b22e890213828df39a92ff
