@@ -48,9 +48,9 @@ async def _(event: Event, message: Message = EventMessage()):
         rabbitPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\res\\rabbit\\"
     else:
         rabbitPath = "/home/sniperpigeon/bot/azusa-bot/res/rabbit/"
-    files = os.listdir(picsPath)
-    fileNum = len(pics)
-    index = random.randint(1, picNum)
+    files = os.listdir(rabbitPath)
+    fileNum = len(files)
+    index = random.randint(1, fileNum)
     await sendRabbit.send(Message([
         MessageSegment("image", {
             "file": f"{'file:///' + rabbitPath + str(index) + '.png'}"
