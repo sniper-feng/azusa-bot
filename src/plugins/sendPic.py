@@ -53,7 +53,7 @@ async def _(event: Event, message: Message = EventMessage()):
     index = random.randint(1, picNum)
     await sendRabbit.send(Message([
         MessageSegment("image", {
-            "file": f"{'file:///' + picsPath + str(index) + '.png'}"
+            "file": f"{'file:///' + rabbitPath + str(index) + '.png'}"
         })
     ])
     )
