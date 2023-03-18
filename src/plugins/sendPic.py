@@ -17,9 +17,9 @@ import re
 #lastSentTime = -1
 sendAzusa = on_fullmatch("梓喵可爱")
 if system() == "Windows":
-    picsPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\res\\"
+    picsPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\res\\azusa\\"
 else:
-    picsPath = "/home/sniperpigeon/bot/azusa-bot/res/"
+    picsPath = "/home/sniperpigeon/bot/azusa-bot/res/azusa/"
 
 pics = os.listdir(picsPath)
 picNum = len(pics)
@@ -40,3 +40,20 @@ async def _(event: Event, message: Message = EventMessage()):
     lastSentTime = time.time()
     #else:
     #await sendAzusa.send("知道你夸我可爱了,刚刚才发了,不要再要了喵")
+
+sendRabbit = on_fullmatch("行走生活")
+@sendRabbit.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    if system() == "Windows":
+        rabbitPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\res\\rabbit\\"
+    else:
+        rabbitPath = "/home/sniperpigeon/bot/azusa-bot/res/rabbit/"
+    files = os.listdir(picsPath)
+    fileNum = len(pics)
+    index = random.randint(1, picNum)
+    await sendRabbit.send(Message([
+        MessageSegment("image", {
+            "file": f"{'file:///' + picsPath + str(index) + '.png'}"
+        })
+    ])
+    )
