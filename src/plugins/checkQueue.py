@@ -21,7 +21,7 @@ shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二
 shop_capacity = [2, 1, 1, 1, 1, 1, 1]
 shop_queue = [-1, -1, -1, -1, -1, -1, -1]
 report_time = [0, 0, 0, 0, 0, 0, 0]
-shop_regex = r"(超星|香坊|阿城|哈西|百盛|江一|江二)[0-9]{1,}"
+shop_regex = r"^(超星|香坊|阿城|哈西|百盛|江一|江二)[0-9]{1,}$"
 register = on_regex(shop_regex)
 
 
