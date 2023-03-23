@@ -17,11 +17,11 @@ import re
 from nonebot import require
 from nonebot.plugin.on import on_fullmatch, on_regex, on_command
 
-shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二"]
-shop_capacity = [2, 1, 1, 1, 1, 1, 1]
-shop_queue = [-1, -1, -1, -1, -1, -1, -1]
-report_time = [0, 0, 0, 0, 0, 0, 0]
-shop_regex = r"^(超星|香坊|阿城|哈西|百盛|江一|江二)[0-9]{1,}$"
+shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二" , "江北"]
+shop_capacity = [2, 1, 1, 1, 1, 1, 1, 1]
+shop_queue = [-1, -1, -1, -1, -1, -1, -1, 1]
+report_time = [0, 0, 0, 0, 0, 0, 0, 0]
+shop_regex = r"^(超星|香坊|阿城|哈西|百盛|江一|江二|江北)[0-9]{1,}$"
 register = on_regex(shop_regex)
 
 
@@ -46,7 +46,7 @@ async def _(event: Event, message: Message = EventMessage()):
             f"{localtime.tm_min},{shopid},{queue}\n")
 
 
-check_regex = r"(超星|香坊|阿城|哈西|百盛|江一|江二)几"
+check_regex = r"(超星|香坊|阿城|哈西|百盛|江一|江二|江北)几"
 checkOut = on_regex(check_regex)
 
 
