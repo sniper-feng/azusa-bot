@@ -21,7 +21,7 @@ from nonebot.plugin.on import on_fullmatch, on_regex, on_command
 
 cfg = on_command("botconfig")
 
-shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二"]
+shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二","江北"]
 
 
 @cfg.handle()

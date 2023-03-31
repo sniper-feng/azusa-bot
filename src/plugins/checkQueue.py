@@ -27,12 +27,12 @@ register = on_regex(shop_regex)
 
 # format of data csv:
 # month,mday,wday,location,queue
-
+SHOP_QUEUE_MAXIMUM = 30
 
 @register.handle()
 async def _(event: Event, message: Message = EventMessage()):
     queue = int(re.search("[0-9]+", event.get_plaintext()).group(0))
-    if queue >= 30:
+    if queue >= SHOP_QUEUE_MAXIMUM:
         await register.send("再乱搞我要生气了喵! ")
         return
     shop = event.get_plaintext()[0:2]
