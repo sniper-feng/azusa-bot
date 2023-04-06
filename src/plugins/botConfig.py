@@ -5,6 +5,7 @@ from platform import system
 from typing import re
 
 from nonebot import on_command, on_regex
+from nonebot.internal.adapter import event
 from nonebot.params import CommandArg, EventMessage
 from nonebot.adapters import Event
 from nonebot.adapters.onebot.v11 import Message, MessageSegment
@@ -19,6 +20,10 @@ import re
 from nonebot import require
 from nonebot.plugin.on import on_fullmatch, on_regex, on_command
 
+if system() == "Windows":
+    blacklistPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\blacklist.json"
+else:
+    blacklistPath = "/home/sniperpigeon/bot/azusa-bot/prop/blacklist.json"
 cfg = on_command("botconfig")
 
 shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二","江北"]
@@ -26,6 +31,12 @@ shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二
 
 @cfg.handle()
 async def _(event: Event, message: Message = EventMessage()):
+    with open(blacklistPath, "r", encoding="utf-8") as f:
+        blackList = json.load(f)
+    qqid = int(event.get_user_id())
+    if qqid in blackList:
+        await cfg.send("宝宝，你也配用？")
+        return
     strings = event.get_plaintext().split(" ")
     # 格式 botconfig addmeal 一区/二区/机厅    吃什么
     #       0           1       2       3

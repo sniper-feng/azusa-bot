@@ -13,6 +13,10 @@ from src.libraries.image import *
 from src.libraries.maimai_best_40 import generate
 from src.libraries.maimai_best_50 import generate50
 import re
+if system() == "Windows":
+    blacklistPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\blacklist.json"
+else:
+    blacklistPath = "/home/sniperpigeon/bot/azusa-bot/prop/blacklist.json"
 
 if system() == "Windows":
     dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
@@ -77,6 +81,12 @@ shopDine = on_regex(r"(超星|香坊|阿城|哈西|百盛|江一|江二)吃什�
 
 @shopDine.handle()
 async def _(event: Event, message: Message = EventMessage()):
+    with open(blacklistPath, "r", encoding="utf-8") as f:
+        blackList = json.load(f)
+    qqid = int(event.get_user_id())
+    if qqid in blackList:
+        await shopDine.send("宝宝，你也配用？")
+        return
     if system() == "Windows":
         dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
     else:

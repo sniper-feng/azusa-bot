@@ -17,26 +17,56 @@ import re
 from nonebot import require
 from nonebot.plugin.on import on_fullmatch, on_regex, on_command
 
-shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二" , "江北"]
+shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二", "江北"]
 shop_capacity = [2, 1, 1, 1, 1, 1, 1, 1]
 shop_queue = [-1, -1, -1, -1, -1, -1, -1, 1]
 report_time = [0, 0, 0, 0, 0, 0, 0, 0]
 shop_regex = r"^(超星|香坊|阿城|哈西|百盛|江一|江二|江北)[0-9]{1,}$"
 register = on_regex(shop_regex)
 
+# 黑名单
+if system() == "Windows":
+    blacklistPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\blacklist.json"
+else:
+    blacklistPath = "/home/sniperpigeon/bot/azusa-bot/prop/blacklist.json"
+riskList = {}
 
 # format of data csv:
 # month,mday,wday,location,queue
 SHOP_QUEUE_MAXIMUM = 30
+SHOP_QUEUE_DELTA_MAXIUM = 8
+SHOP_QUEUE_DELTA_TIME = 2 * 60 * 60  # 允许两个小时之后的大幅度修改
+
 
 @register.handle()
 async def _(event: Event, message: Message = EventMessage()):
-    queue = int(re.search("[0-9]+", event.get_plaintext()).group(0))
-    if queue >= SHOP_QUEUE_MAXIMUM:
-        await register.send("再乱搞我要生气了喵! ")
+    with open(blacklistPath, "r", encoding="utf-8") as f:
+        blackList = json.load(f)
+    qqid = int(event.get_user_id())
+    if qqid in blackList:
+        await register.send("宝宝，你也配用？")
         return
+    queue = int(re.search("[0-9]+", event.get_plaintext()).group(0))
     shop = event.get_plaintext()[0:2]
     shopid = shop_name.index(shop)
+    if queue >= SHOP_QUEUE_MAXIMUM or \
+            (not shop_queue[shopid] == -1 and queue - shop_queue[shopid] >= SHOP_QUEUE_DELTA_MAXIUM
+             and not event.time - report_time[shopid] > SHOP_QUEUE_DELTA_TIME):
+        if qqid in riskList:
+            if riskList[qqid] >= 3:
+                blackList.append(qqid)
+                with open(blacklistPath, "w", encoding="utf-8") as bf:
+                    blstr = json.dumps(blackList)
+                    bf.write(blstr)
+                    await register.send("宝宝，你也配用？")
+                    return
+            else:
+                riskList[qqid] += 1
+        else:
+            riskList[qqid] = 1
+        await register.send(f"你搞尼玛呢.....\n神秘计数器：{riskList[qqid]}")
+        return
+
     shop_queue[shopid] = queue
     report_time[shopid] = event.time
     localtime = time.localtime(time.time())
@@ -52,6 +82,12 @@ checkOut = on_regex(check_regex)
 
 @checkOut.handle()
 async def _(event: Event, message: Message = EventMessage()):
+    with open(blacklistPath, "r", encoding="utf-8") as f:
+        blackList = json.load(f)
+    qqid = int(event.get_user_id())
+    if qqid in blackList:
+        await checkOut.send("宝宝，你也配用？")
+        return
     shop = event.get_plaintext()[0:2]
     shopid = shop_name.index(shop)
     queue = shop_queue[shopid]
@@ -83,6 +119,12 @@ sendAll = on_fullmatch("魅力冰城")
 
 @sendAll.handle()
 async def _(event: Event, message: Message = EventMessage()):
+    with open(blacklistPath, "r", encoding="utf-8") as f:
+        blackList = json.load(f)
+    qqid = int(event.get_user_id())
+    if qqid in blackList:
+        await sendAll.send("宝宝，你也配用？")
+        return
     string = "冰!! 城 夏↓↓ 都~ 哈尔滨大逼队欢迎您...喵?\n"
     for index in range(0, len(shop_name)):
         if time.localtime(time.time()).tm_yday - time.localtime(report_time[index]).tm_yday >= 1:  # 清空过期数据
