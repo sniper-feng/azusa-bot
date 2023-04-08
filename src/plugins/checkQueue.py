@@ -3,6 +3,7 @@ import time
 from typing import re
 
 from nonebot import on_command, on_regex
+from nonebot.internal.rule import Rule
 from nonebot.params import CommandArg, EventMessage
 from nonebot.adapters import Event
 from nonebot.adapters.onebot.v11 import Message, MessageSegment
@@ -16,6 +17,8 @@ import re
 
 from nonebot import require
 from nonebot.plugin.on import on_fullmatch, on_regex, on_command
+
+from src.plugins.public import TEST_GROUP_ID
 
 shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二", "江北"]
 shop_capacity = [2, 1, 1, 1, 1, 1, 1, 1]
@@ -143,3 +146,57 @@ async def _(event: Event, message: Message = EventMessage()):
             else:
                 string += f"这家店有{shop_capacity[index]}台机器，现在去的话也许可以爽霸喵...\n"
     await sendAll.send(string)
+
+
+# -------------------------------------牡丹江暂用----------------------------------
+MUDANJIANG_GROUP_ID = 995682103
+shop_name_ = ["万达"]
+shop_capacity_ = [1]
+shop_queue_ = [-1]
+report_time_ = [0]
+shop_regex_ = r"^(万达)[0-9]{1,}$"
+register_mudanjiang = on_regex(shop_regex_)
+
+
+@register_mudanjiang.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    if event.group_id == MUDANJIANG_GROUP_ID or event.group_id == TEST_GROUP_ID:
+        queue = int(re.search("[0-9]+", event.get_plaintext()).group(0))
+        shop = event.get_plaintext()[0:2]
+        shopid = shop_name_.index(shop)
+        if queue >= SHOP_QUEUE_MAXIMUM or \
+                (not shop_queue_[shopid] == -1 and queue - shop_queue_[shopid] >= SHOP_QUEUE_DELTA_MAXIUM
+                 and not event.time - report_time_[shopid] > SHOP_QUEUE_DELTA_TIME):
+            await register.send(f"别乱报唷...")
+            return
+
+        shop_queue_[shopid] = queue
+        report_time_[shopid] = event.time
+
+check_regex_ = r"(万达)几"
+checkOut_ = on_regex(check_regex_)
+
+
+@checkOut_.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    if event.group_id == MUDANJIANG_GROUP_ID or event.group_id == TEST_GROUP_ID:
+        shop = event.get_plaintext()[0:2]
+        shopid = shop_name_.index(shop)
+        queue = shop_queue_[shopid]
+        reportedLocalTime = time.localtime(report_time_[shopid])
+        reportString = f"{reportedLocalTime.tm_hour}点" + ("0" if reportedLocalTime.tm_min < 10 else "") + \
+                       f"{reportedLocalTime.tm_min}分的时候{shop}有{queue}人喵..."
+        if time.localtime(time.time()).tm_yday - reportedLocalTime.tm_yday >= 1:  # 清空过期数据
+            shop_queue_[shopid] = -1
+            report_time_[shopid] = time.time()
+        if queue == -1:
+            await checkOut.send("没有人报人数喵...")
+        else:
+
+            if shop_queue_[shopid] >= 2 * shop_capacity_[shopid]:
+                reportString += f"这家店有{shop_capacity_[shopid]}台机器，现在去的话预估一轮的等待时间为" \
+                                f"{int(shop_queue_[shopid] / shop_capacity_[shopid] / 2) * 15}分钟喵！\n"
+            else:
+                reportString += f"这家店有{shop_capacity_[shopid]}台机器，现在去的话也许可以爽霸喵...\n"
+            sendTime = time.localtime(time.time())
+            await checkOut.send(reportString)
