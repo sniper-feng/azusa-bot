@@ -142,7 +142,7 @@ async def _(event: Event, message: Message = EventMessage()):
                     "node",
                     {
                         "uin": str(event.self_id),
-                        "name": "Azusa",
+                        "name": "听"+name+"说：",
                         "content": quoteStr
                     }
                 )
@@ -160,6 +160,47 @@ async def _(event: Event, message: Message = EventMessage()):
     else:
         await sendQuoteGroup.send("此人不在名人堂")
 
+sendAllQuote = on_command("allin爆典")
+
+
+@sendQuoteGroup.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    strs = event.get_plaintext().split(" ", 1)
+    with open(quotePath, 'r', encoding="utf-8") as f:
+        quoteList = json.load(f)
+
+    if not getNameFromList(strs[1], quoteList.keys()) is None:
+        name = getNameFromList(strs[1], quoteList.keys())
+        quotes = quoteList[name]
+        if len(quotes) == 0:
+            await sendQuoteGroup.send("这个人没有典呢")
+        else:
+            segments = []
+            for i in quotes:
+                index = random.randint(0, len(quotes) - 1)
+                quote = quotes[index]
+                quoteStr = f"\"{quote}\"\n\n      ————{name}"
+                segments.append(MessageSegment(
+                    "node",
+                    {
+                        "uin": str(event.self_id),
+                        "name": "听"+name+"说：",
+                        "content": quoteStr
+                    }
+                )
+                )
+            bot = nonebot.get_bot()
+            is_private = isinstance(event, PrivateMessageEvent)
+            if (is_private):
+                await bot.call_api(
+                    "send_private_forward_msg", user_id=event.user_id, messages=segments
+                )
+            else:
+                await bot.call_api(
+                    "send_group_forward_msg", group_id=event.group_id, messages=segments
+                )
+    else:
+        await sendQuoteGroup.send("此人不在名人堂")
 
 # 如果不存在返回None
 def getNameFromList(inputName: string, nameList: Any) -> string:
