@@ -163,7 +163,7 @@ async def _(event: Event, message: Message = EventMessage()):
 sendAllQuote = on_command("allin爆典")
 
 
-@sendQuoteGroup.handle()
+@sendAllQuote.handle()
 async def _(event: Event, message: Message = EventMessage()):
     strs = event.get_plaintext().split(" ", 1)
     with open(quotePath, 'r', encoding="utf-8") as f:
@@ -200,7 +200,7 @@ async def _(event: Event, message: Message = EventMessage()):
                     "send_group_forward_msg", group_id=event.group_id, messages=segments
                 )
     else:
-        await sendQuoteGroup.send("此人不在名人堂")
+        await sendAllQuote.send("此人不在名人堂")
 
 # 如果不存在返回None
 def getNameFromList(inputName: string, nameList: Any) -> string:
