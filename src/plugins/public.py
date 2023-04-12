@@ -3,6 +3,7 @@ from nonebot.typing import T_State
 from nonebot.adapters.onebot.v11 import Message, Event, Bot, MessageSegment
 from nonebot.exception import IgnoredException
 from nonebot.message import event_preprocessor
+from nonebot import on_request
 from src.libraries.image import *
 DANGSHIYAN_GROUP_ID = 362333805
 TEST_GROUP_ID = 547862267
@@ -109,3 +110,5 @@ async def _(bot: Bot, event: Event, state: T_State):
                         "qq": f"{event.target_id}"
                     }, )
                 ]))
+
+#Auto Request Handle
