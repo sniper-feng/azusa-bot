@@ -28,6 +28,10 @@ if system() == "Windows":
     aliasPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\alias.json"
 else:
     aliasPath = "/home/sniperpigeon/bot/azusa-bot/prop/alias.json"
+if system() == "Windows":
+    idPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\QQID.json"
+else:
+    idPath = "/home/sniperpigeon/bot/azusa-bot/prop/QQID.json"
 
 addQuote = on_command("入典")
 
@@ -130,18 +134,25 @@ async def _(event: Event, message: Message = EventMessage()):
     if not getNameFromList(strs[1], quoteList.keys()) is None:
         name = getNameFromList(strs[1], quoteList.keys())
         quotes = quoteList[name]
+
         if len(quotes) == 0:
             await sendQuoteGroup.send("这个人没有典呢")
         else:
+            with open(idPath, 'r', encoding="utf-8") as f:
+                idList = json.load(f)
             segments = []
             for i in range(0, 10):
                 index = random.randint(0, len(quotes) - 1)
+                if name in idList:
+                    qqid = idList[name]
+                else:
+                    qqid = event.self_id
                 quote = quotes[index]
                 quoteStr = f"\"{quote}\"\n\n      ————{name}"
                 segments.append(MessageSegment(
                     "node",
                     {
-                        "uin": str(event.self_id),
+                        "uin": str(qqid),
                         "name": "听"+name+"说：",
                         "content": quoteStr
                     }
@@ -175,15 +186,22 @@ async def _(event: Event, message: Message = EventMessage()):
         if len(quotes) == 0:
             await sendQuoteGroup.send("这个人没有典呢")
         else:
+            with open(idPath, 'r', encoding="utf-8") as f:
+                idList = json.load(f)
             segments = []
+
             for i in quotes:
                 index = random.randint(0, len(quotes) - 1)
+                if name in idList:
+                    qqid = idList[name]
+                else:
+                    qqid = event.self_id
                 quote = quotes[index]
                 quoteStr = f"\"{quote}\"\n\n      ————{name}"
                 segments.append(MessageSegment(
                     "node",
                     {
-                        "uin": str(event.self_id),
+                        "uin": str(qqid),
                         "name": "听"+name+"说：",
                         "content": quoteStr
                     }
