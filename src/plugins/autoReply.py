@@ -29,14 +29,16 @@ spMsgReply = {
           "啄集集集集eububu百合秩父助Eububuoooo~津市~津市~津市！！"
 }
 
+spMsgWithRule = [
+    "不要断章取义"
+]
+
 logFile = open("log.txt", "w")
 
 
 async def message_checker(event: Event) -> bool:
-    for msg in spMsg:
-        if event.get_plaintext() == msg:
-            logFile.writelines(msg)
-            return True
+    if event.get_plaintext() in spMsg or event.get_plaintext() in spMsgWithRule:
+        return True
 
     return False
 
@@ -47,6 +49,9 @@ replySp = on_message(rule=replyRule)
 
 @replySp.handle()
 async def _(event: Event, message: Message = EventMessage()):
-    for msg in spMsg:
-        if event.get_plaintext() == msg:
-            await replySp.send(spMsgReply[msg])
+    if event.get_plaintext() == "不要断章取义":
+        await replySp.send(f"\"要断章取义。\"\n\n      ————{event.sender.nickname}")
+    else:
+        for msg in spMsg:
+            if event.get_plaintext() == msg:
+                await replySp.send(spMsgReply[msg])
