@@ -20,11 +20,11 @@ from nonebot.plugin.on import on_fullmatch, on_regex, on_command
 
 from src.plugins.public import TEST_GROUP_ID
 
-shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二", "江北"]
-shop_capacity = [2, 1, 1, 1, 1, 1, 1, 1]
-shop_queue = [-1, -1, -1, -1, -1, -1, -1, 1]
-report_time = [0, 0, 0, 0, 0, 0, 0, 0]
-shop_regex = r"^(超星|香坊|阿城|哈西|百盛|江一|江二|江北)[0-9]{1,}$"
+shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二", "江北", "红场"]
+shop_capacity = [2, 1, 1, 1, 1, 1, 1, 1, 1]
+shop_queue = [-1, -1, -1, -1, -1, -1, -1, 1, 1]
+report_time = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+shop_regex = r"^(超星|香坊|阿城|哈西|百盛|江一|江二|江北|红场)[0-9]{1,}$"
 register = on_regex(shop_regex)
 
 # 黑名单
@@ -79,7 +79,7 @@ async def _(event: Event, message: Message = EventMessage()):
             f"{localtime.tm_min},{shopid},{queue}\n")
 
 
-check_regex = r"(超星|香坊|阿城|哈西|百盛|江一|江二|江北)几"
+check_regex = r"(超星|香坊|阿城|哈西|百盛|江一|江二|江北|红场)几"
 checkOut = on_regex(check_regex)
 
 
@@ -140,11 +140,12 @@ async def _(event: Event, message: Message = EventMessage()):
             reportedLocalTime = time.localtime(report_time[index])
             string += f"{shop_name[index]}有{shop_queue[index]}人({reportedLocalTime.tm_hour}:" \
                       + ("0" if reportedLocalTime.tm_min < 10 else "") + f"{reportedLocalTime.tm_min}).\n "
-            if shop_queue[index] >= 2 * shop_capacity[index]:
-                string += f"这家店有{shop_capacity[index]}台机器，现在去的话预估一轮的等待时间为" \
-                          f"{int(shop_queue[index] / shop_capacity[index] / 2) * 15}分钟喵！\n"
-            else:
-                string += f"这家店有{shop_capacity[index]}台机器，现在去的话也许可以爽霸喵...\n"
+            # if shop_queue[index] >= 2 * shop_capacity[index]:
+            #     string += f"这家店有{shop_capacity[index]}台机器，现在去的话预估一轮的等待时间为" \
+            #               f"{int(shop_queue[index] / shop_capacity[index] / 2) * 15}分钟喵！\n"
+            # else:
+            #     string += f"这家店有{shop_capacity[index]}台机器，现在去的话也许可以爽霸喵...\n"
+            # 避免刷屏，已弃用。
     await sendAll.send(string)
 
 
@@ -172,6 +173,7 @@ async def _(event: Event, message: Message = EventMessage()):
 
         shop_queue_[shopid] = queue
         report_time_[shopid] = event.time
+
 
 check_regex_ = r"(万达)几"
 checkOut_ = on_regex(check_regex_)
