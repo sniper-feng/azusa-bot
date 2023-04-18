@@ -174,4 +174,4 @@ async def _(event: Event, message: Message = EventMessage()):
             blstr = json.dumps(blackList)
             with open(blacklistPath, "w", encoding="utf-8") as f:
                 f.write(blstr)
-        await block.send(f"{event.get_user_id()}")
+            await block.send(f"恭喜QQ号为{qqid}的朋友获得至尊权限捏")
