@@ -61,6 +61,23 @@ async def _(event: Event, message: Message = EventMessage()):
     ])
     )
 
+donate = on_fullmatch("资助梓喵")
+@donate.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    if system() == "Windows":
+        picPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\res\\donate.png"
+    else:
+        picPath = "/home/sniperpigeon/bot/azusa-bot/res/donate.png"
+    await donate.send(Message([
+        MessageSegment("text", {
+            "text": "什么，聪明的你居然知道我住在云服务器也要交房租吗！呀呀，既然你都知道了，那来帮我分担一点房租吧！每个月也要一百多哦！""什么，"
+                    "你问我怎么没有钱？哎呀，我的钱都拿去买琴弦了嘛......诶嘿嘿，那不如给我赞助一点吧？也许我出勤的时候还可以买一顿1+1，嘻嘻"
+        }),
+        MessageSegment("image", {
+            "file": "file:///" + picPath
+        })
+    ])
+    )
 #
 # async def cardRequest(event: Event) -> bool:
 #     msg = event.get_message()
