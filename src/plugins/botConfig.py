@@ -26,12 +26,12 @@ else:
     blacklistPath = "/home/sniperpigeon/bot/azusa-bot/prop/blacklist.json"
 cfg = on_command("botconfig")
 
-shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二","江北"]
-admin = [1332019406]
+shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二", "江北"]
+block_admin = [1332019406, 824889294, 2530342608]
+super_admin = [1332019406]
 
 @cfg.handle()
 async def _(event: Event, message: Message = EventMessage()):
-
     strings = event.get_plaintext().split(" ")
     # 格式 botconfig addmeal 一区/二区/机厅    吃什么
     #       0           1       2       3
@@ -62,7 +62,7 @@ async def _(event: Event, message: Message = EventMessage()):
         elif shop_name.count(strings[2]) == 1:
             await removemeal_shop(strings[3], shop_name.index(strings[2]))
     if strings[1] == "removeBlock":
-        if int(event.get_user_id()) in admin:
+        if int(event.get_user_id()) in block_admin:
             with open(blacklistPath, "r", encoding="utf-8") as f:
                 blackList = json.load(f)
             blackList.remove(int(strings[2]))
@@ -70,7 +70,6 @@ async def _(event: Event, message: Message = EventMessage()):
                 blstr = json.dumps(blackList)
                 bf.write(blstr)
                 return
-
 
 
 async def addmeal(meal: string, campus: int):
@@ -155,3 +154,24 @@ async def removemeal_shop(meal: string, shopid: int):
         jsonStr = json.dumps(data)
         jsonStr.encode('unicode_escape').decode("unicode-escape")
         f.write(jsonStr)
+
+
+block = on_command("拉黑")
+
+
+@block.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    if int(event.get_user_id()) in block_admin:
+        msg = event.raw_message
+        reg = r"^拉黑.*\[CQ:at,qq=([0-9]{1,})\].*"
+        searchResult = re.search(reg, msg)
+
+        if searchResult:
+            qqid = int(searchResult.group(1))
+            with open(blacklistPath, "r", encoding="utf-8") as f:
+                blackList = json.load(f)
+            blackList.append(qqid)
+            blstr = json.dumps(blackList)
+            with open(blacklistPath, "w", encoding="utf-8") as f:
+                f.write(blstr)
+        await block.send(f"{event.get_user_id()}")
