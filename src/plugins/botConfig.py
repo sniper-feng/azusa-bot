@@ -1,4 +1,5 @@
 import json
+import os
 import string
 import time
 from platform import system
@@ -21,14 +22,14 @@ from nonebot import require
 from nonebot.plugin.on import on_fullmatch, on_regex, on_command
 
 if system() == "Windows":
-    blacklistPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\blacklist.json"
+    blacklistPath = os.getcwd()+"\\prop\\blacklist.json"
 else:
-    blacklistPath = "/home/sniperpigeon/bot/azusa-bot/prop/blacklist.json"
+    blacklistPath = os.getcwd()+"/prop/blacklist.json"
 cfg = on_command("botconfig")
 if system() == "Windows":
-    dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
+    dinePath = os.getcwd()+"\\prop\\dine.json"
 else:
-    dinePath = "/home/sniperpigeon/bot/azusa-bot/prop/dine.json"
+    dinePath = os.getcwd()+"/prop/dine.json"
 
 with open(dinePath, 'r', encoding="utf-8") as f:
     dineList = json.load(f)
@@ -71,9 +72,9 @@ async def _(event: Event, message: Message = EventMessage()):
 
 # async def addmeal(meal: string, campus: int):
 #     if system() == "Windows":
-#         dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
+#         dinePath = os.getcwd()+"\\prop\\dine.json"
 #     else:
-#         dinePath = "/home/sniperpigeon/bot/azusa-bot/prop/dine.json"
+#         dinePath = os.getcwd()+"/prop/dine.json"
 #
 #     with open(dinePath, 'r', encoding='utf-8') as f:
 #         data = json.load(f)
@@ -91,9 +92,9 @@ async def _(event: Event, message: Message = EventMessage()):
 #
 # async def removemeal(meal: string, campus: int):
 #     if system() == "Windows":
-#         dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
+#         dinePath = os.getcwd()+"\\prop\\dine.json"
 #     else:
-#         dinePath = "/home/sniperpigeon/bot/azusa-bot/prop/dine.json"
+#         dinePath = os.getcwd()+"/prop/dine.json"
 #
 #     with open(dinePath, 'r', encoding='utf-8') as f:
 #         data = json.load(f)
@@ -113,9 +114,9 @@ async def _(event: Event, message: Message = EventMessage()):
 async def addmeal(meal: string, shopname: string):
     # do
     if system() == "Windows":
-        dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
+        dinePath = os.getcwd()+"\\prop\\dine.json"
     else:
-        dinePath = "/home/sniperpigeon/bot/azusa-bot/prop/dine.json"
+        dinePath = os.getcwd()+"/prop/dine.json"
 
     with open(dinePath, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -134,9 +135,9 @@ async def addmeal(meal: string, shopname: string):
 async def removemeal(meal: string, shopname: string):
     # do
     if system() == "Windows":
-        dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
+        dinePath = os.getcwd()+"\\prop\\dine.json"
     else:
-        dinePath = "/home/sniperpigeon/bot/azusa-bot/prop/dine.json"
+        dinePath = os.getcwd()+"/prop/dine.json"
 
     with open(dinePath, 'r', encoding='utf-8') as f:
         data = json.load(f)

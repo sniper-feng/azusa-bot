@@ -1,4 +1,5 @@
 import json
+import os
 import time
 from typing import re
 
@@ -29,9 +30,9 @@ register = on_regex(shop_regex)
 
 # 黑名单
 if system() == "Windows":
-    blacklistPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\blacklist.json"
+    blacklistPath = os.getcwd()+"\\prop\\blacklist.json"
 else:
-    blacklistPath = "/home/sniperpigeon/bot/azusa-bot/prop/blacklist.json"
+    blacklistPath = os.getcwd()+"/prop/blacklist.json"
 riskList = {}
 
 # format of data csv:
@@ -73,7 +74,7 @@ async def _(event: Event, message: Message = EventMessage()):
     shop_queue[shopid] = queue
     report_time[shopid] = event.time
     localtime = time.localtime(time.time())
-    with open("/home/sniperpigeon/bot/azusa-bot/res/statis.csv", "a+") as csvFile:
+    with open(os.getcwd()+"/res/statis.csv", "a+") as csvFile:
         csvFile.write(
             f"{localtime.tm_mon},{localtime.tm_mday},{localtime.tm_wday},{localtime.tm_hour},"
             f"{localtime.tm_min},{shopid},{queue}\n")
@@ -111,7 +112,7 @@ async def _(event: Event, message: Message = EventMessage()):
             reportString += f"这家店有{shop_capacity[shopid]}台机器，现在去的话也许可以爽霸喵...\n"
         sendTime = time.localtime(time.time())
         await checkOut.send(reportString)
-        with open("/home/sniperpigeon/bot/azusa-bot/res/statis.csv", "a+") as csvFile:
+        with open(os.getcwd()+"/res/statis.csv", "a+") as csvFile:
             csvFile.write(
                 f"{reportedLocalTime.tm_mon},{reportedLocalTime.tm_mday},{reportedLocalTime.tm_wday},"
                 f"{reportedLocalTime.tm_hour},{reportedLocalTime.tm_min},{shopid},{queue}\n")

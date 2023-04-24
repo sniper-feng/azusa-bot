@@ -6,7 +6,7 @@ from PIL import ImageFont, ImageDraw, Image
 
 
 path = 'src/static/high_eq_image.png'
-fontpath = "/home/sniperpigeon/bot/azusa-bot/src/static/msyh.ttc"
+fontpath = os.getcwd()+"/src/static/msyh.ttc"
 
 
 def draw_text(img_pil, text, offset_x):

@@ -18,13 +18,12 @@ import re
 # lastSentTime = -1
 sendAzusa = on_fullmatch("梓喵可爱")
 if system() == "Windows":
-    picsPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\res\\azusa\\"
+    picsPath = os.getcwd()+"\\res\\azusa\\"
 else:
-    picsPath = "/home/sniperpigeon/bot/azusa-bot/res/azusa/"
+    picsPath = os.getcwd()+"/res/azusa/"
 
 pics = os.listdir(picsPath)
 picNum = len(pics)
-
 
 @sendAzusa.handle()
 async def _(event: Event, message: Message = EventMessage()):
@@ -48,9 +47,9 @@ sendRabbit = on_fullmatch("行走生活")
 @sendRabbit.handle()
 async def _(event: Event, message: Message = EventMessage()):
     if system() == "Windows":
-        rabbitPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\res\\rabbit\\"
+        rabbitPath = os.getcwd()+"\\res\\rabbit\\"
     else:
-        rabbitPath = "/home/sniperpigeon/bot/azusa-bot/res/rabbit/"
+        rabbitPath = os.getcwd()+"/res/rabbit/"
     files = os.listdir(rabbitPath)
     fileNum = len(files)
     index = random.randint(1, fileNum)
@@ -65,9 +64,9 @@ donate = on_fullmatch("资助梓喵")
 @donate.handle()
 async def _(event: Event, message: Message = EventMessage()):
     if system() == "Windows":
-        picPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\res\\donate.png"
+        picPath = os.getcwd()+"\\res\\donate.png"
     else:
-        picPath = "/home/sniperpigeon/bot/azusa-bot/res/donate.png"
+        picPath = os.getcwd()+"/res/donate.png"
     await donate.send(Message([
         MessageSegment("text", {
             "text": "什么，聪明的你居然知道我住在云服务器也要交房租吗！呀呀，既然你都知道了，那来帮我分担一点房租吧！每个月也要一百多哦！""什么，"
@@ -89,9 +88,9 @@ async def _(event: Event, message: Message = EventMessage()):
 # @makeCard.handle()
 # async def _(event: Event, message: Message = EventMessage()):
 #     if system() == "Windows":
-#         templatePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\res\\cardtemplate.png"
+#         templatePath = os.getcwd()+"\\res\\cardtemplate.png"
 #     else:
-#         templatePath = "/home/sniperpigeon/bot/azusa-bot/res/cardtemplate.png"
+#         templatePath = os.getcwd()+"/res/cardtemplate.png"
 #     template = Image.open(templatePath)
 #     img = Image.open(message[1]["data"]["file"])
 #     await makeCard.send(message[1]["data"]["file"])

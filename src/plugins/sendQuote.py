@@ -1,4 +1,5 @@
 import json
+import os
 import string
 import time
 
@@ -21,17 +22,17 @@ from nonebot.plugin.on import on_fullmatch, on_regex, on_command
 SELF_ID = 2284891492
 
 if system() == "Windows":
-    quotePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\quote.json"
+    quotePath = os.getcwd()+"\\prop\\quote.json"
 else:
-    quotePath = "/home/sniperpigeon/bot/azusa-bot/prop/quote.json"
+    quotePath = os.getcwd()+"/prop/quote.json"
 if system() == "Windows":
-    aliasPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\alias.json"
+    aliasPath = os.getcwd()+"\\prop\\alias.json"
 else:
-    aliasPath = "/home/sniperpigeon/bot/azusa-bot/prop/alias.json"
+    aliasPath = os.getcwd()+"/prop/alias.json"
 if system() == "Windows":
-    idPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\QQID.json"
+    idPath = os.getcwd()+"\\prop\\QQID.json"
 else:
-    idPath = "/home/sniperpigeon/bot/azusa-bot/prop/QQID.json"
+    idPath = os.getcwd()+"/prop/QQID.json"
 
 addQuote = on_command("入典")
 

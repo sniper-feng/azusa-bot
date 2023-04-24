@@ -1,3 +1,4 @@
+import os
 import time
 from platform import system
 
@@ -15,14 +16,14 @@ from src.libraries.maimai_best_50 import generate50
 import re
 
 if system() == "Windows":
-    blacklistPath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\blacklist.json"
+    blacklistPath = os.getcwd()+"\\prop\\blacklist.json"
 else:
-    blacklistPath = "/home/sniperpigeon/bot/azusa-bot/prop/blacklist.json"
+    blacklistPath = os.getcwd()+"/prop/blacklist.json"
 
 if system() == "Windows":
-    dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
+    dinePath = os.getcwd()+"\\prop\\dine.json"
 else:
-    dinePath = "/home/sniperpigeon/bot/azusa-bot/prop/dine.json"
+    dinePath = os.getcwd()+"/prop/dine.json"
 
 with open(dinePath, 'r', encoding="utf-8") as f:
     dineList = json.load(f)
@@ -36,9 +37,9 @@ list_name = list(dineList.keys())
 @sendDineList.handle()
 async def _(event: Event, message: Message = EventMessage()):
     if system() == "Windows":
-        dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
+        dinePath = os.getcwd()+"\\prop\\dine.json"
     else:
-        dinePath = "/home/sniperpigeon/bot/azusa-bot/prop/dine.json"
+        dinePath = os.getcwd()+"/prop/dine.json"
     with open(dinePath, 'r', encoding="utf-8") as f:
         dineList = json.load(f)
     name = event.get_plaintext()[0:2]
@@ -55,9 +56,9 @@ async def _(event: Event, message: Message = EventMessage()):
 @dine.handle()
 async def _(event: Event, message: Message = EventMessage()):
     if system() == "Windows":
-        dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
+        dinePath = os.getcwd()+"\\prop\\dine.json"
     else:
-        dinePath = "/home/sniperpigeon/bot/azusa-bot/prop/dine.json"
+        dinePath = os.getcwd()+"/prop/dine.json"
 
     with open(dinePath, 'r', encoding="utf-8") as f:
         dineList = json.load(f)
@@ -84,9 +85,9 @@ async def _(event: Event, message: Message = EventMessage()):
 #         await shopDine.send("宝宝，你也配用？")
 #         return
 #     if system() == "Windows":
-#         dinePath = "D:\\maimai-bot\\mai-bot-sniper-main\\mai-bot-sniper-main\\prop\\dine.json"
+#         dinePath = os.getcwd()+"\\prop\\dine.json"
 #     else:
-#         dinePath = "/home/sniperpigeon/bot/azusa-bot/prop/dine.json"
+#         dinePath = os.getcwd()+"/prop/dine.json"
 #
 #     with open(dinePath, 'r', encoding="utf-8") as f:
 #         dineList = json.load(f)
