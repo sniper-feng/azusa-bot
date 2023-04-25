@@ -1,4 +1,4 @@
-import os
+
 import time
 from platform import system
 
@@ -14,7 +14,7 @@ from src.libraries.image import *
 from src.libraries.maimai_best_40 import generate
 from src.libraries.maimai_best_50 import generate50
 import re
-
+import os
 if system() == "Windows":
     blacklistPath = os.getcwd()+"\\prop\\blacklist.json"
 else:

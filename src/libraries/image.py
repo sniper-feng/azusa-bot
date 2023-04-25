@@ -4,7 +4,7 @@ from platform import system
 
 from PIL import ImageFont, ImageDraw, Image
 
-
+import os
 path = 'src/static/high_eq_image.png'
 fontpath = os.getcwd()+"/src/static/msyh.ttc"
 

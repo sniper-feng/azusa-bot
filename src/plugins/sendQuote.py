@@ -1,5 +1,5 @@
 import json
-import os
+
 import string
 import time
 
@@ -18,7 +18,7 @@ import re
 
 from nonebot import require
 from nonebot.plugin.on import on_fullmatch, on_regex, on_command
-
+import os
 SELF_ID = 2284891492
 
 if system() == "Windows":

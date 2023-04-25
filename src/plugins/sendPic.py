@@ -1,6 +1,4 @@
-import os
 import time
-from platform import system
 
 from nonebot import on_fullmatch, on_message
 from nonebot.internal.rule import Rule
@@ -14,7 +12,7 @@ from src.libraries.image import *
 from src.libraries.maimai_best_40 import generate
 from src.libraries.maimai_best_50 import generate50
 import re
-
+import os
 # lastSentTime = -1
 sendAzusa = on_fullmatch("梓喵可爱")
 if system() == "Windows":
