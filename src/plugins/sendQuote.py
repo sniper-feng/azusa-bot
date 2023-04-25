@@ -285,6 +285,6 @@ async def _(event: Event, message: Message = EventMessage()):
     bot = nonebot.get_bot()
     is_private = isinstance(event, PrivateMessageEvent)
     if (is_private):
-        await bot.call_api("send_private_forward_msg", user_id = event.user_id, messages = segment)
+        await bot.call_api("send_private_forward_msg", user_id = event.user_id, messages = seg)
     else:
-        await bot.call_api("send_group_forward_msg", group_id = event.group_id, messages = segments)
+        await bot.call_api("send_group_forward_msg", group_id = event.group_id, messages = seg)
