@@ -274,4 +274,17 @@ async def _(event: Event, message: Message = EventMessage()):
     strs = event.get_plaintext().split(" ", 1)
     name = strs[1]
     editedQuote = strangeQuotes[random.randint(0, len(strangeQuotes) - 1)].replace("xx",name)
-    await sendLove.send(editedQuote)
+    seg = MessageSegment(
+        "node",
+        {
+            "uin": str(event.get_user_id()),
+            "name": "听" + name + "说：",
+            "content": editedQuote
+        }
+    )
+    bot = nonebot.get_bot()
+    is_private = isinstance(event, PrivateMessageEvent)
+    if (is_private):
+        await bot.call_api("send_private_forward_msg", user_id = event.user_id, messages = segment)
+    else:
+        await bot.call_api("send_group_forward_msg", group_id = event.group_id, messages = segments)
