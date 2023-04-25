@@ -1,5 +1,4 @@
 import json
-import os
 import string
 import time
 from platform import system
@@ -17,7 +16,7 @@ from src.libraries.image import *
 from src.libraries.maimai_best_40 import generate
 from src.libraries.maimai_best_50 import generate50
 import re
-
+import os
 from nonebot import require
 from nonebot.plugin.on import on_fullmatch, on_regex, on_command
 

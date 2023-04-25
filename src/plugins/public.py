@@ -1,4 +1,3 @@
-import os
 
 from nonebot import on_command, on_notice, on_fullmatch
 from nonebot.typing import T_State
@@ -6,7 +5,7 @@ from nonebot.adapters.onebot.v11 import Message, Event, Bot, MessageSegment
 from nonebot.exception import IgnoredException
 from nonebot.message import event_preprocessor
 from nonebot import on_request
-from src.libraries.image import *
+import os
 DANGSHIYAN_GROUP_ID = 362333805
 TEST_GROUP_ID = 547862267
 

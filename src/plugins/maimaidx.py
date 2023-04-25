@@ -9,7 +9,7 @@ from src.libraries.image import *
 from src.libraries.maimai_best_40 import generate
 from src.libraries.maimai_best_50 import generate50
 import re
-
+import os
 
 def song_txt(music: Music):
     return Message([
