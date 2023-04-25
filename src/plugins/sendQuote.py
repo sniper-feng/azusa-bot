@@ -22,17 +22,17 @@ from nonebot.plugin.on import on_fullmatch, on_regex, on_command
 SELF_ID = 2284891492
 
 if system() == "Windows":
-    quotePath = os.getcwd()+"\\prop\\quote.json"
+    quotePath = os.getcwd() + "\\prop\\quote.json"
 else:
-    quotePath = os.getcwd()+"/prop/quote.json"
+    quotePath = os.getcwd() + "/prop/quote.json"
 if system() == "Windows":
-    aliasPath = os.getcwd()+"\\prop\\alias.json"
+    aliasPath = os.getcwd() + "\\prop\\alias.json"
 else:
-    aliasPath = os.getcwd()+"/prop/alias.json"
+    aliasPath = os.getcwd() + "/prop/alias.json"
 if system() == "Windows":
-    idPath = os.getcwd()+"\\prop\\QQID.json"
+    idPath = os.getcwd() + "\\prop\\QQID.json"
 else:
-    idPath = os.getcwd()+"/prop/QQID.json"
+    idPath = os.getcwd() + "/prop/QQID.json"
 
 addQuote = on_command("入典")
 
@@ -154,7 +154,7 @@ async def _(event: Event, message: Message = EventMessage()):
                     "node",
                     {
                         "uin": str(qqid),
-                        "name": "听"+name+"说：",
+                        "name": "听" + name + "说：",
                         "content": quoteStr
                     }
                 )
@@ -171,6 +171,7 @@ async def _(event: Event, message: Message = EventMessage()):
                 )
     else:
         await sendQuoteGroup.send("此人不在名人堂")
+
 
 sendAllQuote = on_command("allin爆典")
 
@@ -203,7 +204,7 @@ async def _(event: Event, message: Message = EventMessage()):
                     "node",
                     {
                         "uin": str(qqid),
-                        "name": "听"+name+"说：",
+                        "name": "听" + name + "说：",
                         "content": quoteStr
                     }
                 )
@@ -221,6 +222,7 @@ async def _(event: Event, message: Message = EventMessage()):
     else:
         await sendAllQuote.send("此人不在名人堂")
 
+
 # 如果不存在返回None
 def getNameFromList(inputName: string, nameList: Any) -> string:
     if inputName in nameList:
@@ -232,3 +234,35 @@ def getNameFromList(inputName: string, nameList: Any) -> string:
             return aliasList[inputName]
         else:
             return None
+
+
+strangeQuotes = [
+    "今天是xx瘾发作最严重的一次， 躺在床上，拼命喊着xx的名字，难受的一直抓自己眼睛，以为刷b站没事，发现全b站都在推xx的视频，"
+    "眼睛越来越大都要炸开了一样，拼命扇自己眼睛，越扇越用力，扇到自己眼泪流出来，真的不知道该怎么办，我真的想xx想得要发疯了。"
+    "我躺在床上会想xx，我洗澡会想xx，我出门会想xx，我走路会想xx，我坐车会想xx，我工作会想xx，我玩手机会想xx，我盯着路边的xx看，"
+    "我盯着马路对面的xx看，我盯着地铁里的xx看，我盯着网上的xx看，我盯着朋友圈别人合照里的xx看，我每时每刻眼睛都直直地盯着xx看，"
+    "像一台雷达一样扫视经过我身边的每一只xx， 我真的觉得自己像中邪了一样，我对xx的念想似乎都是病态的了，我好孤独啊！真的好孤独啊！"
+    "xx xx 没有你我可怎么活啊 xx xx 没有你我可怎么活啊 xx xx 没有你我可怎么活啊 xx xx 没有你我可怎么活啊 xx xx "
+    "没有你我可怎么活啊 xx xx 没有你我可怎么活啊 xx xx 没有你我可怎么活啊 xx xx 没有你我可怎么活啊 xx xx "
+    "没有你我可怎么活啊 xx xx 没有你我可怎么活啊",
+    "在没有看到xx之前，我脖子上戴着佛珠左手拿十字架✝️右手拿符纸，请了六十个老和尚 ‍在我旁边打坐念经。看见xx后，"
+    "我靠，这就是我的命中注定，这就是我的人生唯一，我扯下我的佛珠，扔掉我的十字架，撒光我的符纸，赶跑六十个老和尚，"
+    "我不再需要这些了，此时此刻我满心满眼都是你，我整个人都在地板上打滚，我亲吻我的地板，我捶烂我的墙壁，"
+    "我喝了十八碗二锅头，我为你而醉，我惊声尖叫       xx我没有你该怎么办",
+    "xx！xx！xx！(尖叫) (扭曲) (阴暗地爬行)(尖叫) (扭曲) (阴暗地爬行)(尖叫) (扭曲) (阴暗地爬行)(尖叫) (扭曲) "
+    "(阴暗地爬行)(尖叫) (扭曲) (阴暗地爬行)(尖叫) (扭曲) (阴暗地爬行)"
+    "(尖叫) (扭曲) (阴暗地爬行)（最后变成弯弯曲曲在里世界散发怨念）",
+    "xx，我稍微问一句，绝对没有冒犯的意思，也可能是我搞错了，又或者其实我是出现了幻觉，"
+    "不管怎么样，我都希望我们能秉持着友好理性的相处原则，不要因为一些可能的误会伤害了我们之间的友谊，"
+    "最后再说一句，我绝对没有冒犯的意思，只是本着对于宇宙本质的伟大探究精神以及求真务实精神发问:\n\n“我能和您结婚吗？”"
+
+]
+sendLove = on_command("发癫")
+
+
+@sendLove.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    strs = event.get_plaintext().split(" ", 1)
+    name = strs[1]
+    editedQuote = strangeQuotes[random.randint(0, len(strangeQuotes) - 1)].replace("xx",name)
+    await sendLove.send(editedQuote)
