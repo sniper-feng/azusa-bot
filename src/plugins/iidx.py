@@ -150,10 +150,28 @@ async def _(event: Event, message: Message = EventMessage()):
     db = sqlite3.connect("res/iidxdb.db")
     cursor = db.cursor()
     # cursor.execute("SELECT number,title FROM main WHERE title like '%'+?+'%' ORDER BY title LIMIT 20;", (strs[1],))
-    cursor.execute("SELECT number,title FROM main WHERE title like ? ORDER BY title LIMIT 20;", ("%" + strs[1] + "%",))
-    output = "查询结果\n"
-    for row in cursor:
-        output += f"id{row[0]} {row[1]}\n"
+
+    #精确查询
+    cursor.execute("SELECT number,title FROM main WHERE title=?;", (strs[1],))
+    if cursor.arraysize > 0:
+        output = "查询结果\n"
+        for row in cursor:
+            output += f"id{row[0]} {row[1]}\n"
+        output += f"查询到完全匹配输入的歌曲。查找已结束。"
+    else:
+        cursor.execute("SELECT number,title FROM main WHERE title like ? ORDER BY CHAR_LENGTH(title);", ("%" + strs[1] + "%",))
+        if cursor.arraysize == 0:
+            output = "无结果"
+            return
+        output = "查询结果\n"
+        count = 0
+        for row in cursor:
+            if count >=20:
+                break
+            output += f"id{row[0]} {row[1]}\n"
+            count +=1
+        if count >=20:
+            output += f"数据过多（{cursor.arraysize}条），仅显示前20条。请缩小搜索范围。"
     await iidxSearch.send(output)
     db.close()
 
@@ -165,7 +183,6 @@ async def _(event: Event, message: Message = EventMessage()):
     db = sqlite3.connect("res/iidxdb.db")
     cursor = db.cursor()
     output = ""
-
     cursor.execute("SELECT title,artist,version FROM main WHERE number=?", (int(strs[1]),))
     if cursor.arraysize == 0:
         await iidxInfo.send("没有这样的乐曲。")
