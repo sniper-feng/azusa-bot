@@ -31,7 +31,7 @@ TEXTAGE_VERSION_NAME_TABLE = "https://www.textage.cc/score/datatbl.js"
 TEXTAGE_TRACK_TITLE_TABLE = "https://www.textage.cc/score/titletbl.js"
 
 rebuildDatabase = on_fullmatch("iidx-rebuild-database")
-iidxSearch = on_command("/iidx查歌")
+iidxSearch = on_command("/iidx查歌", aliases={"查寺","查二寺"})
 iidxhelp = on_fullmatch("/iidx help")
 iidxInfo = on_regex(r"/iidx查谱\s+([0-9]{1,4}?)\s*([S,D,s,d][p,P][B,b,N,n,H,h,a,AL,l])?")
 vertbl = ["Consumer only", "1st style", "2nd style", "3rd style", "4th style",
@@ -249,7 +249,7 @@ def getChartURL(version: int, side: int, name: str, diff: int, chart: str) -> st
 async def _(event: Event, message: Message = EventMessage()):
     await iidxhelp.send(
         '''/iidx查歌 <str> 查询曲目（当结果过多时，只取前20条）
-        /iidx查谱 <id> [(S/D)P(B/N/H/A/L)]查询指定谱面。当不指定难度时，给出曲目信息。
-        /iidx help查看帮助
-        '''
+/iidx查谱 <id> [(S/D)P(B/N/H/A/L)]查询指定谱面。当不指定难度时，给出曲目信息。
+/iidx help查看帮助
+'''
     )
