@@ -254,7 +254,16 @@ strangeQuotes = [
     "(尖叫) (扭曲) (阴暗地爬行)（最后变成弯弯曲曲在里世界散发怨念）",
     "xx，我稍微问一句，绝对没有冒犯的意思，也可能是我搞错了，又或者其实我是出现了幻觉，"
     "不管怎么样，我都希望我们能秉持着友好理性的相处原则，不要因为一些可能的误会伤害了我们之间的友谊，"
-    "最后再说一句，我绝对没有冒犯的意思，只是本着对于宇宙本质的伟大探究精神以及求真务实精神发问:\n\n“我能和您结婚吗？”"
+    "最后再说一句，我绝对没有冒犯的意思，只是本着对于宇宙本质的伟大探究精神以及求真务实精神发问:\n\n“我能和您结婚吗？”",
+    "我在电梯间里“偶遇”了xx。\nxx按一层，我想，他在暗示我他家里只有他一个人诶。\nxx按二层，我想，他是想邀请我一起共进二人的晚餐吗。"
+    "\nxx按三层，我想，他一定想说我们这辈子永不散场，泪目。\nxx按四层，我想，他想说他一见到我内心里就四海潮生。"
+    "\nxx按五层，我想，他居然挑了五层，他是不是真的暗恋我。\nxx按六层，我想，看来他很崇拜我嘛。xx按七层，"
+    "我想，他今年一定想跟我过七夕吧。\nxx按八层，我想，八层，他八成是喜欢我。\nxx按九层，我想，他一定是想跟我长久地走下去……"
+    "\nxx按十层，我想，他一定是在纪念我们快要十年的(单方面)爱情。\nxx不按，我想，他见到我就紧张得不敢动了。"
+    "\nxx刚进电梯又转身离开，我想，好，xx害臊的故意躲着我。他就是暗恋我。正好，我也喜欢你。",
+    "xx，我被队长炒鱿鱼了 我重新找了份电焊工的工作 今天是我第一天当电焊工 "
+    "天气很暖和 我站在树下点了一根烟 我不想再做电焊工了 我不是一个称职的电焊工 我电不到你 也焊不牢你的心"
+
 
 ]
 sendLove = on_command("发癫")
@@ -265,4 +274,17 @@ async def _(event: Event, message: Message = EventMessage()):
     strs = event.get_plaintext().split(" ", 1)
     name = strs[1]
     editedQuote = strangeQuotes[random.randint(0, len(strangeQuotes) - 1)].replace("xx",name)
-    await sendLove.send(editedQuote)
+    seg = MessageSegment(
+        "node",
+        {
+            "uin": str(event.get_user_id()),
+            "name": "听" + name + "说：",
+            "content": editedQuote
+        }
+    )
+    bot = nonebot.get_bot()
+    is_private = isinstance(event, PrivateMessageEvent)
+    if (is_private):
+        await bot.call_api("send_private_forward_msg", user_id = event.user_id, messages = seg)
+    else:
+        await bot.call_api("send_group_forward_msg", group_id = event.group_id, messages = seg)
