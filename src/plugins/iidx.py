@@ -153,14 +153,15 @@ async def _(event: Event, message: Message = EventMessage()):
 
     #精确查询
     cursor.execute("SELECT number,title FROM main WHERE title=?;", (strs[1],))
-    if cursor.arraysize > 0:
-        output = "查询结果\n"
-        for row in cursor:
-            output += f"id{row[0]} {row[1]}\n"
-        output += f"查询到完全匹配输入的歌曲。查找已结束。"
-    else:
-        cursor.execute("SELECT number,title FROM main WHERE title like ? ORDER BY CHAR_LENGTH(title);", ("%" + strs[1] + "%",))
-        if cursor.arraysize == 0:
+    output ="查询结果：\n"
+    count = 0
+    for row in cursor:
+        output += f"id{row[0]} {row[1]}\n"
+        count += 1
+    output += f"查询到完全匹配输入的歌曲。查找已结束。"
+    if count <= 0:
+        cursor.execute("SELECT number,title FROM main WHERE title like ? ORDER BY LENGTH(title);", ("%" + strs[1] + "%",))
+        if cursor.rowcount == 0:
             output = "无结果"
             return
         output = "查询结果\n"
@@ -171,8 +172,8 @@ async def _(event: Event, message: Message = EventMessage()):
             output += f"id{row[0]} {row[1]}\n"
             count +=1
         if count >=20:
-            output += f"数据过多（{cursor.arraysize}条），仅显示前20条。请缩小搜索范围。"
-    await iidxSearch.send(output)
+            output += f"仅显示前20条。请缩小搜索范围。"
+    await iidxSearch.send(output if count > 0 else "没有找到结果")
     db.close()
 
 
@@ -184,13 +185,13 @@ async def _(event: Event, message: Message = EventMessage()):
     cursor = db.cursor()
     output = ""
     cursor.execute("SELECT title,artist,version FROM main WHERE number=?", (int(strs[1]),))
-    if cursor.arraysize == 0:
-        await iidxInfo.send("没有这样的乐曲。")
-        return
-
+    count = 0
     for line in cursor:
         output += f"曲名：{line[0]}\n艺术家：{line[1]}\n版本：{getVersion(line[2])}\n难度：\n"
-
+        count += 1
+    if count == 0:
+        await iidxInfo.send("没有这样的乐曲。")
+        return
     # 无指定难度，显示信息。
     if len(strs) <= 2:
         cursor.execute("SELECT * FROM chart WHERE number=?", (int(strs[1]),))
