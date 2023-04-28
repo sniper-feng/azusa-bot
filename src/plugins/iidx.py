@@ -33,7 +33,7 @@ TEXTAGE_TRACK_TITLE_TABLE = "https://www.textage.cc/score/titletbl.js"
 rebuildDatabase = on_fullmatch("iidx-rebuild-database")
 iidxSearch = on_command("/iidx查歌", aliases={"查寺","查二寺"})
 iidxhelp = on_fullmatch("/iidx help")
-iidxInfo = on_regex(r"/iidx查谱\s+([0-9]{1,4}?)\s*([S,D,s,d][p,P][B,b,N,n,H,h,a,AL,l])?")
+iidxInfo = on_command("/iidx查谱",aliases={"查谱","查寺谱"})
 vertbl = ["Consumer only", "1st style", "2nd style", "3rd style", "4th style",
           "5th style", "6th style", "7th style", "8th style", "9th style", "10th style",
           "IIDX RED", "HAPPY SKY", "DistorteD", "GOLD", "DJ TROOPERS", "EMPRESS",
@@ -146,6 +146,9 @@ async def _(event: Event, message: Message = EventMessage()):
 
 @iidxSearch.handle()
 async def _(event: Event, message: Message = EventMessage()):
+    if re.match(r"(/iidx查谱|查寺谱|查谱)\s+([0-9]{1,4})\s*([S,D,s,d][p,P][B,b,N,n,H,h,a,A,L,l])?",
+                event.get_plaintext()) is None:
+        return
     strs = event.get_plaintext().split(" ", maxsplit=1)
     db = sqlite3.connect("res/iidxdb.db")
     cursor = db.cursor()
