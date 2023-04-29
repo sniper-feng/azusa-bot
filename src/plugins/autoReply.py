@@ -12,6 +12,7 @@ from src.libraries.maimai_best_40 import generate
 from src.libraries.maimai_best_50 import generate50
 import re
 import os
+
 spMsg = [
     "你说得对",
     "努",
@@ -55,3 +56,38 @@ async def _(event: Event, message: Message = EventMessage()):
         for msg in spMsg:
             if event.get_plaintext() == msg:
                 await replySp.send(spMsgReply[msg])
+
+
+
+
+
+async def at_self(bot: Bot, event: Event) -> bool:
+    id = bot.self_id
+    if event.post_type == "message":
+        value = f"[CQ:at,qq={id}]" in event.raw_message
+    else:
+        value = False
+    return value
+
+stopAtMe = on_message(rule=at_self, priority=3, block=True)
+
+@stopAtMe.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    await stopAtMe.send(Message(
+        [MessageSegment("at",
+            {
+                "qq": str(event.get_user_id())
+            }
+        ),
+         MessageSegment("at",
+                        {
+                            "qq": str(event.get_user_id())
+                        }
+                        ),
+         MessageSegment("at",
+                        {
+                            "qq": str(event.get_user_id())
+                        }
+                        )
+         ]
+    ))
