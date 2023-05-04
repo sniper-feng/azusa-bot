@@ -146,9 +146,6 @@ async def _(event: Event, message: Message = EventMessage()):
 
 @iidxSearch.handle()
 async def _(event: Event, message: Message = EventMessage()):
-    if re.match(r"(/iidx查谱|查寺谱|查谱)\s+([0-9]{1,4})\s*([S,D,s,d][p,P][B,b,N,n,H,h,a,A,L,l])?",
-                event.get_plaintext()) is None:
-        return
     strs = event.get_plaintext().split(" ", maxsplit=1)
     db = sqlite3.connect("res/iidxdb.db")
     cursor = db.cursor()
@@ -182,6 +179,9 @@ async def _(event: Event, message: Message = EventMessage()):
 
 @iidxInfo.handle()
 async def _(event: Event, message: Message = EventMessage()):
+    if re.match(r"(/iidx查谱|查寺谱|查谱)\s+([0-9]{1,4})\s*([S,D,s,d][p,P][B,b,N,n,H,h,a,A,L,l])?",
+                event.get_plaintext()) is None:
+        return
     text = re.sub(r" +", r" ", event.get_plaintext())
     strs = text.split(" ", maxsplit=2)
     db = sqlite3.connect("res/iidxdb.db")
