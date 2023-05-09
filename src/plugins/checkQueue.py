@@ -21,18 +21,46 @@ from nonebot.plugin.on import on_fullmatch, on_regex, on_command
 
 from src.plugins.public import TEST_GROUP_ID
 
-shop_name = ["超星", "香坊", "哈西", "百盛", "阿城", "江一", "江二", "江北", "红场"]
-shop_capacity = [2, 1, 1, 1, 1, 1, 1, 1, 1]
-shop_queue = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
-report_time = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-shop_regex = r"^(超星|香坊|阿城|哈西|百盛|江一|江二|江北|红场)[0-9]{1,}$"
+if system() == "Windows":
+    shopPath = os.getcwd() + "\\prop\\shop.json"
+else:
+    shopPath = os.getcwd() + "/prop/shop.json"
+with open(shopPath, "r", encoding="utf-8") as f:
+    shopList = json.load(f)
+
+shop_name = shopList.keys()
+shop_capacity = []
+for it in shopList.items():
+    shop_capacity.append(it[1])
+shop_queue = [-1 for i in range(len(shop_capacity))]
+report_time = [0 for i in range(len(shop_capacity))]
+
+shop_regex = r"^("
+count = 0
+for it in shop_name:
+    if count != 0:
+        shop_regex += "|"
+    shop_regex += it
+    count += 1
+shop_regex += r")([0-9]{1,})$"
+
 register = on_regex(shop_regex)
+
+check_regex = r"^("
+count = 0
+for it in shop_name:
+    if count != 0:
+        check_regex += "|"
+    check_regex += it
+    count += 1
+check_regex += r")几$"
+checkOut = on_regex(check_regex)
 
 # 黑名单
 if system() == "Windows":
-    blacklistPath = os.getcwd()+"\\prop\\blacklist.json"
+    blacklistPath = os.getcwd() + "\\prop\\blacklist.json"
 else:
-    blacklistPath = os.getcwd()+"/prop/blacklist.json"
+    blacklistPath = os.getcwd() + "/prop/blacklist.json"
 riskList = {}
 
 # format of data csv:
@@ -50,8 +78,9 @@ async def _(event: Event, message: Message = EventMessage()):
     if qqid in blackList:
         await register.send("宝宝，你也配用？")
         return
-    queue = int(re.search("[0-9]+", event.get_plaintext()).group(0))
-    shop = event.get_plaintext()[0:2]
+    pattern = re.match(shop_regex, event.get_plaintext()).group()
+    queue = int(pattern[2])
+    shop = pattern[1]
     shopid = shop_name.index(shop)
     if queue >= SHOP_QUEUE_MAXIMUM or \
             (not shop_queue[shopid] == -1 and queue - shop_queue[shopid] >= SHOP_QUEUE_DELTA_MAXIUM
@@ -74,14 +103,10 @@ async def _(event: Event, message: Message = EventMessage()):
     shop_queue[shopid] = queue
     report_time[shopid] = event.time
     localtime = time.localtime(time.time())
-    with open(os.getcwd()+"/res/statis.csv", "a+") as csvFile:
+    with open(os.getcwd() + "/res/statis.csv", "a+") as csvFile:
         csvFile.write(
             f"{localtime.tm_mon},{localtime.tm_mday},{localtime.tm_wday},{localtime.tm_hour},"
             f"{localtime.tm_min},{shopid},{queue}\n")
-
-
-check_regex = r"(超星|香坊|阿城|哈西|百盛|江一|江二|江北|红场)几"
-checkOut = on_regex(check_regex)
 
 
 @checkOut.handle()
@@ -92,7 +117,7 @@ async def _(event: Event, message: Message = EventMessage()):
     if qqid in blackList:
         await checkOut.send("宝宝，你也配用？")
         return
-    shop = event.get_plaintext()[0:2]
+    shop = re.match(check_regex,event.get_plaintext()).group(1)
     shopid = shop_name.index(shop)
     queue = shop_queue[shopid]
     reportedLocalTime = time.localtime(report_time[shopid])
@@ -112,7 +137,7 @@ async def _(event: Event, message: Message = EventMessage()):
             reportString += f"这家店有{shop_capacity[shopid]}台机器，现在去的话也许可以爽霸喵...\n"
         sendTime = time.localtime(time.time())
         await checkOut.send(reportString)
-        with open(os.getcwd()+"/res/statis.csv", "a+") as csvFile:
+        with open(os.getcwd() + "/res/statis.csv", "a+") as csvFile:
             csvFile.write(
                 f"{reportedLocalTime.tm_mon},{reportedLocalTime.tm_mday},{reportedLocalTime.tm_wday},"
                 f"{reportedLocalTime.tm_hour},{reportedLocalTime.tm_min},{shopid},{queue}\n")
