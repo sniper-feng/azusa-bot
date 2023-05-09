@@ -56,6 +56,8 @@ for it in shop_name:
 check_regex += r")几$"
 checkOut = on_regex(check_regex)
 
+saveData = on_fullmatch("/saveinfo")
+recover = on_fullmatch("/recoverinfo")
 # 黑名单
 if system() == "Windows":
     blacklistPath = os.getcwd() + "\\prop\\blacklist.json"
@@ -227,3 +229,20 @@ async def _(event: Event, message: Message = EventMessage()):
                 reportString += f"这家店有{shop_capacity_[shopid]}台机器，现在去的话也许可以爽霸喵...\n"
             sendTime = time.localtime(time.time())
             await checkOut.send(reportString)
+@saveData.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    tempData = []
+    for i in range(0, len(shop_queue)):
+        tempData.append((shop_queue[i], report_time[i]))
+
+    with open(os.getcwd()+"/temp.json", "w", encoding="utf-8") as f:
+        json.dump(tempData, f)
+    await saveData.send("机厅人数已保存在硬盘")
+@recover.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    with open(os.getcwd() + "/temp.json", "r", encoding="utf-8") as f:
+        tempData = json.load(f)
+    for i in range(0, len(shop_queue)):
+        shop_queue[i] = tempData[i][0]
+        report_time[i] = tempData[i][1]
+    await saveData.send("机厅人数已从硬盘恢复")
