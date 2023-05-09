@@ -28,7 +28,7 @@ else:
 with open(shopPath, "r", encoding="utf-8") as f:
     shopList = json.load(f)
 
-shop_name = shopList.keys()
+shop_name = list(shopList.keys())
 shop_capacity = []
 for it in shopList.items():
     shop_capacity.append(it[1])
@@ -78,9 +78,8 @@ async def _(event: Event, message: Message = EventMessage()):
     if qqid in blackList:
         await register.send("宝宝，你也配用？")
         return
-    pattern = re.match(shop_regex, event.get_plaintext()).group()
-    queue = int(pattern[2])
-    shop = pattern[1]
+    queue = int(re.match(shop_regex, event.get_plaintext()).group(2))
+    shop = re.match(shop_regex, event.get_plaintext()).group(1)
     shopid = shop_name.index(shop)
     if queue >= SHOP_QUEUE_MAXIMUM or \
             (not shop_queue[shopid] == -1 and queue - shop_queue[shopid] >= SHOP_QUEUE_DELTA_MAXIUM
