@@ -64,6 +64,17 @@ async def _(event: Event, message: Message = EventMessage()):
         dineList = json.load(f)
     name = event.get_plaintext()[0:2]
     dineNames = dineList[name]
+    wday = time.localtime(time.time()).tm_wday
+    if wday == 3 or wday == 4:
+        index = random.randint(-7 if wday == 3 else -10, len(dineNames))
+        if index == 0:
+            await dine.send("吃锤子!")
+        elif index < 0:
+            await dine.send("今天是周三，吃 " + "汉堡王" + " 怎么样喵?" if wday == 3 else
+                            "今天是周四，V我50，我要吃 肯德基 喵 ")
+        else:
+            await dine.send("吃 " + dineNames[index - 1] + " 怎么样喵?")
+        return
     index = random.randint(0, len(dineNames))
     if index == 0:
         await dine.send("吃锤子!")
