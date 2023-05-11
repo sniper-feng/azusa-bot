@@ -64,7 +64,7 @@ async def _(event: Event, message: Message = EventMessage()):
         dineList = json.load(f)
     name = event.get_plaintext()[0:2]
     dineNames = dineList[name]
-    wday = time.localtime(time.time()).tm_wday
+    wday = time.localtime(time.time()).tm_wday + 1
     if wday == 3 or wday == 4:
         index = random.randint(-7 if wday == 3 else -10, len(dineNames))
         if index == 0:
