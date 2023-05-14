@@ -58,6 +58,9 @@ checkOut = on_regex(check_regex)
 
 saveData = on_fullmatch("/saveinfo")
 recover = on_fullmatch("/recoverinfo")
+
+setEvent = on_command("/大会模式")
+unsetEvent = on_command("/取消大会模式")
 # 黑名单
 if system() == "Windows":
     blacklistPath = os.getcwd() + "\\prop\\blacklist.json"
@@ -83,7 +86,10 @@ async def _(event: Event, message: Message = EventMessage()):
     queue = int(re.match(shop_regex, event.get_plaintext()).group(2))
     shop = re.match(shop_regex, event.get_plaintext()).group(1)
     shopid = shop_name.index(shop)
-    if queue >= SHOP_QUEUE_MAXIMUM or \
+    if shop_queue[shopid] == -2:
+        await register.send("捏，这家现在正在举行比赛或其他活动捏")
+        return
+    elif queue >= SHOP_QUEUE_MAXIMUM or \
             (not shop_queue[shopid] == -1 and queue - shop_queue[shopid] >= SHOP_QUEUE_DELTA_MAXIUM
              and not event.time - report_time[shopid] > SHOP_QUEUE_DELTA_TIME):
         if qqid in riskList:
@@ -118,7 +124,7 @@ async def _(event: Event, message: Message = EventMessage()):
     if qqid in blackList:
         await checkOut.send("宝宝，你也配用？")
         return
-    shop = re.match(check_regex,event.get_plaintext()).group(1)
+    shop = re.match(check_regex, event.get_plaintext()).group(1)
     shopid = shop_name.index(shop)
     queue = shop_queue[shopid]
     reportedLocalTime = time.localtime(report_time[shopid])
@@ -129,6 +135,8 @@ async def _(event: Event, message: Message = EventMessage()):
         report_time[shopid] = time.time()
     if queue == -1:
         await checkOut.send("没有人报人数喵...")
+    elif queue == -2:
+        await checkOut.send(shop+"现在正在举行比赛或其他活动唷")
     else:
 
         if shop_queue[shopid] >= 2 * shop_capacity[shopid]:
@@ -163,6 +171,8 @@ async def _(event: Event, message: Message = EventMessage()):
 
         if shop_queue[index] == -1:
             string += f"{shop_name[index]}没有数据\n"
+        elif shop_queue[index] == -2:
+            string += f"{shop_name[index]}正在举行活动\n"
         else:
             reportedLocalTime = time.localtime(report_time[index])
             string += f"{shop_name[index]}有{shop_queue[index]}人({reportedLocalTime.tm_hour}:" \
@@ -229,15 +239,19 @@ async def _(event: Event, message: Message = EventMessage()):
                 reportString += f"这家店有{shop_capacity_[shopid]}台机器，现在去的话也许可以爽霸喵...\n"
             sendTime = time.localtime(time.time())
             await checkOut.send(reportString)
+
+
 @saveData.handle()
 async def _(event: Event, message: Message = EventMessage()):
     tempData = []
     for i in range(0, len(shop_queue)):
         tempData.append((shop_queue[i], report_time[i]))
 
-    with open(os.getcwd()+"/temp.json", "w", encoding="utf-8") as f:
+    with open(os.getcwd() + "/temp.json", "w", encoding="utf-8") as f:
         json.dump(tempData, f)
     await saveData.send("机厅人数已保存在硬盘")
+
+
 @recover.handle()
 async def _(event: Event, message: Message = EventMessage()):
     with open(os.getcwd() + "/temp.json", "r", encoding="utf-8") as f:
@@ -246,3 +260,21 @@ async def _(event: Event, message: Message = EventMessage()):
         shop_queue[i] = tempData[i][0]
         report_time[i] = tempData[i][1]
     await saveData.send("机厅人数已从硬盘恢复")
+
+
+@setEvent.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    shopname = event.get_plaintext().split(" ", 1)[1]
+    if shopname in shop_name:
+        shop_queue[shop_name.index(shopname)] = -2
+        await setEvent.send(shopname + " 已被设定为大会模式")
+    else:
+        await setEvent.send("没有发现该店铺")
+@unsetEvent.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    shopname = event.get_plaintext().split(" ", 1)[1]
+    if shopname in shop_name:
+        shop_queue[shop_name.index(shopname)] = -1
+        await setEvent.send(shopname + " 已被解除大会模式")
+    else:
+        await setEvent.send("没有发现该店铺")
