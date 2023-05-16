@@ -31,9 +31,10 @@ TEXTAGE_VERSION_NAME_TABLE = "https://www.textage.cc/score/datatbl.js"
 TEXTAGE_TRACK_TITLE_TABLE = "https://www.textage.cc/score/titletbl.js"
 
 rebuildDatabase = on_fullmatch("iidx-rebuild-database")
-iidxSearch = on_command("/iidx查歌", aliases={"查寺","查二寺"})
+iidxSearch = on_command("/iidx查歌", aliases={"查寺", "查二寺"})
 iidxhelp = on_fullmatch("/iidx help")
-iidxInfo = on_command("/iidx查谱",aliases={"查谱","查寺谱"})
+iidxInfo = on_command("/iidx查谱", aliases={"查谱", "查寺谱"})
+iidxRandom = on_command("随寺sp", aliases={"随寺dp"})
 vertbl = ["Consumer only", "1st style", "2nd style", "3rd style", "4th style",
           "5th style", "6th style", "7th style", "8th style", "9th style", "10th style",
           "IIDX RED", "HAPPY SKY", "DistorteD", "GOLD", "DJ TROOPERS", "EMPRESS",
@@ -151,27 +152,28 @@ async def _(event: Event, message: Message = EventMessage()):
     cursor = db.cursor()
     # cursor.execute("SELECT number,title FROM main WHERE title like '%'+?+'%' ORDER BY title LIMIT 20;", (strs[1],))
 
-    #精确查询
+    # 精确查询
     cursor.execute("SELECT number,title FROM main WHERE title=?;", (strs[1],))
-    output ="查询结果：\n"
+    output = "查询结果：\n"
     count = 0
     for row in cursor:
         output += f"id{row[0]} {row[1]}\n"
         count += 1
     output += f"查询到完全匹配输入的歌曲。查找已结束。"
     if count <= 0:
-        cursor.execute("SELECT number,title FROM main WHERE title like ? ORDER BY LENGTH(title);", ("%" + strs[1] + "%",))
+        cursor.execute("SELECT number,title FROM main WHERE title like ? ORDER BY LENGTH(title);",
+                       ("%" + strs[1] + "%",))
         if cursor.rowcount == 0:
             output = "无结果"
             return
         output = "查询结果\n"
         count = 0
         for row in cursor:
-            if count >=20:
+            if count >= 20:
                 break
             output += f"id{row[0]} {row[1]}\n"
-            count +=1
-        if count >=20:
+            count += 1
+        if count >= 20:
             output += f"仅显示前20条。请缩小搜索范围。"
     await iidxSearch.send(output if count > 0 else "没有找到结果")
     db.close()
@@ -253,6 +255,7 @@ async def _(event: Event, message: Message = EventMessage()):
     await iidxInfo.send(output)
     db.close()
 
+
 def getVersion(num: int) -> str:
     return "SubStream" if num == -1 else vertbl[num]
 
@@ -274,3 +277,45 @@ async def _(event: Event, message: Message = EventMessage()):
 /iidx help查看帮助
 '''
     )
+
+
+@iidxRandom.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    strs = event.get_plaintext().split(" ", 1)
+    style = strs[0][2]
+    diff = int(strs[1])
+    db = sqlite3.connect("res/iidxdb.db")
+    cursor = db.cursor()
+    command = "SELECT * FROM chart where SPB=? or SPN =? or SPH=? or SPA=? or SPH=? order by RANDOM() limit 1" if style == 's' else \
+        "SELECT * FROM chart where DPN =? or DPH=? or DPA=? or DPH=? order by RANDOM() limit 1"
+    cursor.execute(command, (diff, diff, diff, diff,diff) if style == 's' else (diff, diff, diff,diff))
+    number = 0
+    output = ""
+    for line in cursor:
+        number = int(line[1])
+        if style == "s":
+            if line[3] == diff:
+                output += "SPB:" + str(diff)
+            if line[4] == diff:
+                output += "SPN:" + str(diff)
+            if line[5] == diff:
+                output += "SPH:" + str(diff)
+            if line[6] == diff:
+                output += "SPA:" + str(diff)
+            if line[7] == diff:
+                output += "SPL:" + str(diff)
+        else:
+            if line[8] == diff:
+                output += "DPN:" + str(diff)
+            if line[9] == diff:
+                output += "DPH:" + str(diff)
+            if line[10] == diff:
+                output += "DPA:" + str(diff)
+            if line[11] == diff:
+                output += "DPL:" + str(diff)
+    cursor.execute("SELECT * FROM main where number=?",(number,))
+    strout = ""
+    for line in cursor:
+        strout = f"{line[1]}.{line[3]} : By {line[5]}\n"
+    strout += output
+    await iidxRandom.send(strout)
