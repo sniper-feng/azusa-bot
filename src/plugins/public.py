@@ -95,25 +95,19 @@ async def _(bot: Bot, event: Event, state: T_State):
     if event.__getattribute__('group_id') is None:
         event.__delattr__('group_id')
         if event.target_id == event.self_id:
-            await poke.send(
-                Message([
-                    MessageSegment("at", {
-                        "qq": f"{event.sender_id}"
-                    })
-                ]))
-        else:
-            await poke.send(
-                Message([
-                    MessageSegment("at", {
-                        "qq": f"{event.sender_id}"
-                    }, ),
-                    MessageSegment("at", {
-                        "qq": f"{event.target_id}"
-                    }, )
-                ]))
-test = on_fullmatch("/test")
-@test.handle()
-async def _(bot: Bot, event: Event, state: T_State):
-    await test.send(os.getcwd())
+            if os.system() == "Windows":
+                picPath = os.getcwd() + "\\res\\donate.png"
+            else:
+                picPath = os.getcwd() + "/res/donate.png"
+            await poke.send(Message([
+                MessageSegment("text", {
+                    "text": "什么，聪明的你居然知道我住在云服务器也要交房租吗！呀呀，既然你都知道了，那来帮我分担一点房租吧！每个月也要一百多哦！""什么，"
+                            "你问我怎么没有钱？哎呀，我的钱都拿去买琴弦了嘛......诶嘿嘿，那不如给我赞助一点吧？也许我出勤的时候还可以买一顿1+1，嘻嘻"
+                }),
+                MessageSegment("image", {
+                    "file": "file:///" + picPath
+                })
+            ])
+            )
 
 #Auto Request Handle

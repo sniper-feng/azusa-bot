@@ -67,8 +67,8 @@ async def _(event: Event, message: Message = EventMessage()):
         picPath = os.getcwd()+"/res/donate.png"
     await donate.send(Message([
         MessageSegment("text", {
-            "text": "什么，聪明的你居然知道我住在云服务器也要交房租吗！呀呀，既然你都知道了，那来帮我分担一点房租吧！每个月也要一百多哦！""什么，"
-                    "你问我怎么没有钱？哎呀，我的钱都拿去买琴弦了嘛......诶嘿嘿，那不如给我赞助一点吧？也许我出勤的时候还可以买一顿1+1，嘻嘻"
+            "text": "你好捏，因为bot目前运行在云服务器上，每个月需要一定的服务器费用，"
+                    "如果你感觉bot的功能给你带来了便利的话，可以考虑酌情赞助一点捏！可以打几块钱赞助我去打一pc，或者十几块钱包了我的出勤午饭捏"
         }),
         MessageSegment("image", {
             "file": "file:///" + picPath
