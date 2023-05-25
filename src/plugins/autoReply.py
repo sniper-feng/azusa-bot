@@ -36,6 +36,7 @@ spMsgWithRule = [
 
 logFile = open("log.txt", "w")
 
+pairParentheses = on_regex(r"^(（|）|\(|\)|【|】|\{|\}|《|》|\<|\>|&#91;|&#93;)+$")
 
 async def message_checker(event: Event) -> bool:
     if event.get_plaintext() in spMsg or event.get_plaintext() in spMsgWithRule:
@@ -91,3 +92,34 @@ async def _(event: Event, message: Message = EventMessage()):
                         )
          ]
     ))
+
+@pairParentheses.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    s = event.get_plaintext().replace("&#93;", "]").replace("&#91;", "[")
+    stack = []
+    for ch in s:
+        if ch == "（":
+            stack.insert(0, "）")
+        elif ch == "(":
+            stack.insert(0, ")")
+        elif ch == "【":
+            stack.insert(0, "】")
+        elif ch == "[":
+            stack.insert(0, "]")
+        elif ch == "{":
+            stack.insert(0, "}")
+        elif ch == "《":
+            stack.insert(0, "》")
+        elif ch == "<":
+            stack.insert(0, ">")
+        elif ch in ["）", ")", "】", "]", "}", "》", ">"]:
+            if len(stack) > 0 and stack[0] == ch:
+                stack.pop(0)
+
+    if len(stack) > 0:
+        output = ""
+        for ch in stack:
+            output += ch
+        await pairParentheses.send(output)
+
+

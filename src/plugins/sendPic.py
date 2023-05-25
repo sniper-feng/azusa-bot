@@ -13,15 +13,17 @@ from src.libraries.maimai_best_40 import generate
 from src.libraries.maimai_best_50 import generate50
 import re
 import os
+
 # lastSentTime = -1
 sendAzusa = on_fullmatch("梓喵可爱")
 if system() == "Windows":
-    picsPath = os.getcwd()+"\\res\\azusa\\"
+    picsPath = os.getcwd() + "\\res\\azusa\\"
 else:
-    picsPath = os.getcwd()+"/res/azusa/"
+    picsPath = os.getcwd() + "/res/azusa/"
 
 pics = os.listdir(picsPath)
 picNum = len(pics)
+
 
 @sendAzusa.handle()
 async def _(event: Event, message: Message = EventMessage()):
@@ -45,9 +47,9 @@ sendRabbit = on_fullmatch("行走生活")
 @sendRabbit.handle()
 async def _(event: Event, message: Message = EventMessage()):
     if system() == "Windows":
-        rabbitPath = os.getcwd()+"\\res\\rabbit\\"
+        rabbitPath = os.getcwd() + "\\res\\rabbit\\"
     else:
-        rabbitPath = os.getcwd()+"/res/rabbit/"
+        rabbitPath = os.getcwd() + "/res/rabbit/"
     files = os.listdir(rabbitPath)
     fileNum = len(files)
     index = random.randint(1, fileNum)
@@ -58,13 +60,16 @@ async def _(event: Event, message: Message = EventMessage()):
     ])
     )
 
+
 donate = on_fullmatch("资助梓喵")
+
+
 @donate.handle()
 async def _(event: Event, message: Message = EventMessage()):
     if system() == "Windows":
-        picPath = os.getcwd()+"\\res\\donate.png"
+        picPath = os.getcwd() + "\\res\\donate.png"
     else:
-        picPath = os.getcwd()+"/res/donate.png"
+        picPath = os.getcwd() + "/res/donate.png"
     await donate.send(Message([
         MessageSegment("text", {
             "text": "你好捏，因为bot目前运行在云服务器上，每个月需要一定的服务器费用，"

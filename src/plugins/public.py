@@ -1,5 +1,5 @@
 
-from nonebot import on_command, on_notice, on_fullmatch
+from nonebot import on_command, on_notice, on_fullmatch, on_regex
 from nonebot.typing import T_State
 from nonebot.adapters.onebot.v11 import Message, Event, Bot, MessageSegment
 from nonebot.exception import IgnoredException
@@ -8,6 +8,7 @@ from nonebot import on_request
 import os
 DANGSHIYAN_GROUP_ID = 362333805
 TEST_GROUP_ID = 547862267
+
 
 @event_preprocessor
 async def preprocessor(bot, event, state):
