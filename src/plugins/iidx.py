@@ -70,7 +70,7 @@ async def _(event: Event, message: Message = EventMessage()):
     mainPlainText = re.sub(r"\.fontcolor\(.+?\)", " ", mainPlainText)  # 滤去标题中的格式控制标签
     mainPlainText = html.unescape(mainPlainText)  # 去除HTML转义字符
     # name
-    datas = re.findall(r"'(.+)'.*:\[(\w+),(\w+),(\w+),\"(.+?)\",\"(.+?)\",\"(.+?)\"(,\"(.+?)\")?\]", mainPlainText)
+    datas = re.findall(r"'(.+)'.*:\[(\w+),(\w+),(\w+),\"(.+?)\",\"(.+?)\",\"(.+?)\"(,\"(.+?)\")?\s?\]", mainPlainText)
     # 每一行 0-name 1-version 2-id 3-status 4-genre 5-artist 6-title 7废止 8可能是remix
     count = 0
     for line in datas:
