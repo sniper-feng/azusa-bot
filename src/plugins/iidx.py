@@ -80,10 +80,10 @@ async def _(event: Event, message: Message = EventMessage()):
             count = 0
         if line[8] != '':
             cursor.execute("INSERT  INTO main (number,name,title,genre,artist,version) VALUES(?,?,?,?,?,?)",
-                           (int(line[2]), line[0], line[6].replace("\\\"", "\"") + "  " + line[8].replace("\\\"", "\""), line[4].replace("\\\"", "\""), line[5], int(line[1])))
+                           (int(line[2]), line[0], line[6].replace("\\\"", "\"") + "  " + line[8].replace("\\\"", "\""), line[4].replace("\\\"", "\""), line[5].replace("\\\"", "\""), int(line[1])))
         else:
             cursor.execute("INSERT  INTO main (number,name,title,genre,artist,version) VALUES(?,?,?,?,?,?)",
-                           (int(line[2]), line[0], line[6].replace("\\\"", "\""), line[4].replace("\\\"", "\""), line[5], int(line[1])))
+                           (int(line[2]), line[0], line[6].replace("\\\"", "\""), line[4].replace("\\\"", "\""), line[5].replace("\\\"", "\""), int(line[1])))
     db.commit()
 
     # -------------------------------------------------难度表-------------------------------------------------
