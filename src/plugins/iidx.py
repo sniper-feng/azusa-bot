@@ -156,10 +156,10 @@ async def _(event: Event, message: Message = EventMessage()):
     cursor.execute("SELECT number,title FROM main WHERE title=?;", (strs[1],))
     output = "查询结果：\n"
     count = 0
+    firstID = 0
     for row in cursor:
-        output += f"id{row[0]} {row[1]}\n"
+        firstID = row[0]
         count += 1
-    output += f"查询到完全匹配输入的歌曲。查找已结束。"
     if count <= 0:
         cursor.execute("SELECT number,title FROM main WHERE title like ? ORDER BY LENGTH(title);",
                        ("%" + strs[1] + "%",))
@@ -175,6 +175,15 @@ async def _(event: Event, message: Message = EventMessage()):
             count += 1
         if count >= 20:
             output += f"仅显示前20条。请缩小搜索范围。"
+    else:
+        cursor.execute("SELECT title,artist,version FROM main WHERE number=?", (firstID,))
+        for aline in cursor:
+            output += f"曲名：{aline[0]}\n艺术家：{aline[1]}\n版本：{getVersion(aline[2])}\n难度：\n"
+        cursor.execute("SELECT * FROM chart WHERE number=?", (firstID,))
+        for line in cursor:
+            output += f"SP: B:{'无' if line[3] == 0 else line[3]} N:{line[4]} H:{line[5]} A:{'无' if line[6] == 0 else line[6]} L:{'无' if line[7] == 0 else line[7]}\n"
+            output += f"DP: N:{line[8]} H:{line[9]} A:{'无' if line[10] == 0 else line[10]} L:{'无' if line[11] == 0 else line[11]}\n"
+
     await iidxSearch.send(output if count > 0 else "没有找到结果")
     db.close()
 
