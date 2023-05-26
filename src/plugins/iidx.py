@@ -178,7 +178,7 @@ async def _(event: Event, message: Message = EventMessage()):
     else:
         cursor.execute("SELECT title,artist,version FROM main WHERE number=?", (firstID,))
         for aline in cursor:
-            output += f"曲名：{aline[0]}\n艺术家：{aline[1]}\n版本：{getVersion(aline[2])}\n难度：\n"
+            output += f"id{firstID} 曲名：{aline[0]}\n艺术家：{aline[1]}\n版本：{getVersion(aline[2])}\n难度：\n"
         cursor.execute("SELECT * FROM chart WHERE number=?", (firstID,))
         for line in cursor:
             output += f"SP: B:{'无' if line[3] == 0 else line[3]} N:{line[4]} H:{line[5]} A:{'无' if line[6] == 0 else line[6]} L:{'无' if line[7] == 0 else line[7]}\n"
