@@ -112,13 +112,14 @@ async def _(event: Event, message: Message = EventMessage()):
 
     if not getNameFromList(strs[1], quoteList.keys()) is None:
         name = getNameFromList(strs[1], quoteList.keys())
+        personSuffix = list(quoteList.keys()).index(strs[1])
         quotes = quoteList[name]
         if len(quotes) == 0:
             await addQuote.send("这个人没有典呢")
         else:
             index = random.randint(0, len(quotes) - 1)
             quote = quotes[index]
-            await sendQuote.send(f"\"{quote}\"\n\n      ————{name}")
+            await sendQuote.send(f"{personSuffix+1}.{index+1}  \"{quote}\"\n\n      ————{name}")
     else:
         await addQuote.send("此人不在名人堂")
 
@@ -134,6 +135,7 @@ async def _(event: Event, message: Message = EventMessage()):
 
     if not getNameFromList(strs[1], quoteList.keys()) is None:
         name = getNameFromList(strs[1], quoteList.keys())
+        personSuffix = list(quoteList.keys()).index(strs[1])
         quotes = quoteList[name]
 
         if len(quotes) == 0:
@@ -149,7 +151,7 @@ async def _(event: Event, message: Message = EventMessage()):
                 else:
                     qqid = event.self_id
                 quote = quotes[index]
-                quoteStr = f"\"{quote}\"\n\n      ————{name}"
+                quoteStr = f"{personSuffix+1}.{index+1}  \"{quote}\"\n\n      ————{name}"
                 segments.append(MessageSegment(
                     "node",
                     {
@@ -184,6 +186,7 @@ async def _(event: Event, message: Message = EventMessage()):
 
     if not getNameFromList(strs[1], quoteList.keys()) is None:
         name = getNameFromList(strs[1], quoteList.keys())
+        personSuffix = list(quoteList.keys()).index(strs[1])
         quotes = quoteList[name]
         if len(quotes) == 0:
             await sendQuoteGroup.send("这个人没有典呢")
@@ -192,14 +195,14 @@ async def _(event: Event, message: Message = EventMessage()):
                 idList = json.load(f)
             segments = []
 
-            for i in quotes:
-                index = random.randint(0, len(quotes) - 1)
+            for index in range(0, len(quotes)):
+
                 if name in idList:
                     qqid = idList[name]
                 else:
                     qqid = event.self_id
                 quote = quotes[index]
-                quoteStr = f"\"{quote}\"\n\n      ————{name}"
+                quoteStr = f"{personSuffix+1}.{index+1}  \"{quote}\"\n\n      ————{name}"
                 segments.append(MessageSegment(
                     "node",
                     {
@@ -288,3 +291,40 @@ async def _(event: Event, message: Message = EventMessage()):
         await bot.call_api("send_private_forward_msg", user_id = event.user_id, messages = seg)
     else:
         await bot.call_api("send_group_forward_msg", group_id = event.group_id, messages = seg)
+
+
+
+toDeleteList = {}
+deleteQuote = on_regex(r"删典\s+[0-9]+.[0-9]+")
+UPPER_LIMIT = 3
+@deleteQuote.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    matchobj = re.findall(r"[0-9]+", event.get_plaintext())
+    personSuffix = int(matchobj[0]) - 1
+    quoteSuffix = int(matchobj[1]) - 1
+    with open(quotePath, 'r', encoding="utf-8") as f:
+        quoteList = json.load(f)
+    keys = list(quoteList.keys())
+    if len(keys) > personSuffix:
+        quotes = quoteList[keys[personSuffix]]
+
+        if len(quotes) > quoteSuffix:
+            # 提供的下标无误，开始检查待删除列表
+            if not (personSuffix, quoteSuffix) in toDeleteList: #没有人投过这个删除票
+                toDeleteList[(personSuffix, quoteSuffix)] = [event.get_user_id()] #将发起删除的用户加入列表
+                await deleteQuote.send(f"现在有1个人决定投票删除这个典，若满{UPPER_LIMIT}人则可以直接删除")
+            else:
+                if not event.get_user_id() in toDeleteList[(personSuffix, quoteSuffix)]: #不在就加入，多一票。
+                    toDeleteList[(personSuffix, quoteSuffix)].append(event.get_user_id())
+                await deleteQuote.send(f"现在有{len(toDeleteList[(personSuffix, quoteSuffix)])}个人决定投票删除这个典，若满{UPPER_LIMIT}人则可以直接删除")
+                if len(toDeleteList[(personSuffix, quoteSuffix)]) >= UPPER_LIMIT:
+                    await deleteQuote.send("现在开删喵！")# 有足够的人投票决定删除
+                    toDeleteList.pop((personSuffix, quoteSuffix))
+                    del quoteList[keys[personSuffix]][quoteSuffix]
+                    with open(quotePath, 'w', encoding="utf-8") as f:
+                        jsonStr = json.dumps(quoteList)
+                        jsonStr.encode('unicode_escape').decode("unicode-escape")
+                        f.write(jsonStr)
+                    # 删！
+            return
+    await deleteQuote.send("你提供的编号似乎不太对呢")
