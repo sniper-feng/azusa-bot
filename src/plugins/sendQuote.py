@@ -106,6 +106,7 @@ sendQuote = on_command("爆典")
 
 @sendQuote.handle()
 async def _(event: Event, message: Message = EventMessage()):
+
     strs = event.get_plaintext().split(" ", 1)
     with open(quotePath, 'r', encoding="utf-8") as f:
         quoteList = json.load(f)
@@ -326,5 +327,24 @@ async def _(event: Event, message: Message = EventMessage()):
                         jsonStr.encode('unicode_escape').decode("unicode-escape")
                         f.write(jsonStr)
                     # 删！
+            return
+    await deleteQuote.send("你提供的编号似乎不太对呢")
+
+sendQuoteByIndex = on_regex(r"查典\s+ [0-9]+.[0-9]+")
+@sendQuoteByIndex.handle()
+async def _(event: Event, message: Message = EventMessage()):
+    matchobj = re.findall(r"[0-9]+", event.get_plaintext())
+    personSuffix = int(matchobj[0]) - 1
+    quoteSuffix = int(matchobj[1]) - 1
+    with open(quotePath, 'r', encoding="utf-8") as f:
+        quoteList = json.load(f)
+    keys = list(quoteList.keys())
+    if len(keys) > personSuffix:
+        quotes = quoteList[keys[personSuffix]]
+
+        if len(quotes) > quoteSuffix:
+            # 提供的下标无误
+            quote = quotes[quoteSuffix-1]
+            await sendQuote.send(f"{personSuffix + 1}.{quoteSuffix + 1}  \"{quote}\"\n\n      ————{keys[personSuffix]}")
             return
     await deleteQuote.send("你提供的编号似乎不太对呢")
