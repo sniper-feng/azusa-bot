@@ -345,6 +345,6 @@ async def _(event: Event, message: Message = EventMessage()):
         if len(quotes) > quoteSuffix:
             # 提供的下标无误
             quote = quotes[quoteSuffix-1]
-            await sendQuote.send(f"{personSuffix + 1}.{quoteSuffix + 1}  \"{quote}\"\n\n      ————{keys[personSuffix]}")
+            await sendQuoteByIndex.send(f"{personSuffix + 1}.{quoteSuffix + 1}  \"{quote}\"\n\n      ————{keys[personSuffix]}")
             return
-    await deleteQuote.send("你提供的编号似乎不太对呢")
+    await sendQuoteByIndex.send("你提供的编号似乎不太对呢")
