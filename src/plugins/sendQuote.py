@@ -330,7 +330,7 @@ async def _(event: Event, message: Message = EventMessage()):
             return
     await deleteQuote.send("你提供的编号似乎不太对呢")
 
-sendQuoteByIndex = on_regex(r"查典\s+ [0-9]+.[0-9]+")
+sendQuoteByIndex = on_regex(r"查典\s*[0-9]+\.[0-9]+")
 @sendQuoteByIndex.handle()
 async def _(event: Event, message: Message = EventMessage()):
     matchobj = re.findall(r"[0-9]+", event.get_plaintext())
