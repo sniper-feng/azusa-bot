@@ -1,4 +1,3 @@
-
 from nonebot import on_command, on_notice, on_fullmatch, on_regex
 from nonebot.typing import T_State
 from nonebot.adapters.onebot.v11 import Message, Event, Bot, MessageSegment
@@ -6,6 +5,7 @@ from nonebot.exception import IgnoredException
 from nonebot.message import event_preprocessor
 from nonebot import on_request
 import os
+
 DANGSHIYAN_GROUP_ID = 362333805
 TEST_GROUP_ID = 547862267
 
@@ -49,7 +49,6 @@ botconfig addmeal/removemeal <机厅> <食物> | 给机厅菜单加菜/删菜
         )
 
 
-
 async def _group_poke(bot: Bot, event: Event) -> bool:
     value = (event.notice_type == "notify" and event.sub_type == "poke")
     # value = (event.notice_type == "notify" and event.sub_type == "poke" and event.target_id == int(bot.self_id))
@@ -76,7 +75,8 @@ async def _group_mention(bot: Bot, event: Event) -> bool:
         value = False
     return value
 
-mention = on_notice(rule=_group_mention, priority=3,block=True)
+
+mention = on_notice(rule=_group_mention, priority=3, block=True)
 
 
 @mention.handle()
@@ -111,4 +111,18 @@ async def _(bot: Bot, event: Event, state: T_State):
             ])
             )
 
-#Auto Request Handle
+
+async def newFri(bot: Bot, event: Event) -> bool:
+    value = (event.type == "request" and event.request_type == "friend")
+    # value = (event.notice_type == "notify" and event.sub_type == "poke" and event.target_id == int(bot.self_id))
+    return value
+
+
+# Auto Request Handle
+newFriend = on_request(rule=newFri, priority=3, block=True)
+
+
+@newFriend.handle()
+async def _(bot: Bot, event: Event, state: T_State):
+    event.approved = True
+    return
