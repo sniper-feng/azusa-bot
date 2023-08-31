@@ -113,7 +113,7 @@ async def _(event: Event, message: Message = EventMessage()):
 
     if not getNameFromList(strs[1], quoteList.keys()) is None:
         name = getNameFromList(strs[1], quoteList.keys())
-        personSuffix = list(quoteList.keys()).index(strs[1])
+        personSuffix = list(quoteList.keys()).index(name)
         quotes = quoteList[name]
         if len(quotes) == 0:
             await addQuote.send("这个人没有典呢")
