@@ -41,7 +41,7 @@ pairParentheses = on_regex(r"^(（|）|\(|\)|【|】|\{|\}|《|》|\<|\>|&#91;|&
 
 async def message_checker(event: Event) -> bool:
     if event.get_plaintext() in spMsg or event.get_plaintext() in spMsgWithRule\
-            or spMsgWithRule[1] in event.get_plaintext().lower():
+            or "zaquva" in event.get_plaintext().lower():
         return True
 
     return False
