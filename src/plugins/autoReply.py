@@ -53,7 +53,7 @@ replySp = on_message(rule=replyRule)
 async def _(event: Event, message: Message = EventMessage()):
     if event.get_plaintext() == "不要断章取义":
         await replySp.send(f"\"要断章取义。\"\n\n      ————{event.sender.nickname}")
-    elif "zaquva" in event.get_plaintext().lower():
+    elif event.get_plaintext().lower().find("zaquva")>=0:
         await replySp.send("诘绥祉緑麻祥匈肱ZAQUVA壬怦，玉晢丙繍効芯舣沃赁殄艀并■効芯舣沃赁殄舍藕凬秽薜舸鬘悳页匈儿，慢蛸持匈箆恼BOSSA "
                            "GABBA挫伎怦氏箆DUANGDAUNGDAUNG咏弋埓仆突蛸咏峺芙咏亥恍悳页压匈儿慢积蛸持匈XCXC Crackpot "
                            "Evangelist阻伎怦压恐儿蛸芙纽蚋藓议瀑巾薜舸鬘序型寂鲶夕屠穉，F壌伉诘咏恋袖袖遭压想，匈儿页竃蛸持匈昨顿咏亥恍巷诘羮卫QQ1.25竜椒淅毅汇狛蛸匈寔挥低椣膸H"
