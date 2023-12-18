@@ -196,12 +196,13 @@ async def _(event: Event, message: Message = EventMessage()):
     lis = barkDict[event.group_id]
 
     length = max(5, len(lis))
-    msg = [{
-        "type": "text",
-        "data": {
+    msg = [MessageSegment(
+        "text",
+        {
             "text": "狗叫榜\n"
         }
-    }]
+
+    )]
     i = 1
     for qqid in list(lis.keys()):
         if i > 5:
@@ -209,27 +210,28 @@ async def _(event: Event, message: Message = EventMessage()):
         s1 = f"第{i}名:"
         s2 = f"  共狗叫{lis[qqid]}次\n"
 
-        msg.append({
-            "type": "text",
-            "data": {
+        msg.append(MessageSegment(
+            "text",
+            {
                 "text": s1
             }
 
-        })
-        msg.append({
-            "type": "at",
-            "data": {
-                "qq": qqid
-            }
-        })
-        msg.append({
-            "type": "text",
-            "data": {
+        ))
+        msg.append(MessageSegment("at",
+                                  {
+                                      "qq": qqid
+                                  }
+                                  ))
+        msg.append(MessageSegment(
+            "text",
+            {
                 "text": s2
             }
-        }
+
+        )
         )
     await checkBark.send(Message(msg))
+
 
 addBark = on_command("添加狗叫")
 
