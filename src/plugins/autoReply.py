@@ -179,9 +179,9 @@ async def _(event: Event, message: Message = EventMessage()):
         if event.get_user_id() in barkDict[event.group_id]:
             barkDict[event.group_id][event.get_user_id()] += 1
         else:
-            barkDict[event.group_id][event.get_user_id()] = 1
+            barkDict[event.group_id] = {event.get_user_id(): 1}
     else:
-        barkDict[event.group_id][event.get_user_id()] = 1
+        barkDict[event.group_id] = {event.get_user_id(): 1}
     await bark.send("检测到狗叫声")
 
 
