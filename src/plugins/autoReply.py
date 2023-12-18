@@ -168,7 +168,7 @@ async def bark_checker(event: Event) -> bool:
     return False
 
 
-bark = on_message(rule=at_someone, priority=3, block=True)
+bark = on_message(rule=bark_checker, priority=3, block=True)
 
 barkDict = {}
 
